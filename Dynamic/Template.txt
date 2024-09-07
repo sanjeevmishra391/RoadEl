@@ -1,0 +1,48 @@
+import java.util.Arrays;
+
+
+    int result;
+    Methods method;
+    int dp[];
+
+    __(int[] ip, Methods method, boolean use) {
+        this.method = method;
+
+        if (method == Methods.RECURSION && use) {
+            result = recursive(ip);
+        } else if (method == Methods.TABULATION && use) {
+            result = tabulation(ip);
+        } else if (method == Methods.MEMOIZATION && use) {
+            dp = new int[ip.length + 1];
+            result = memoization(ip);
+        }
+        
+        if(use)
+            Utility.printRes(this.method, 
+                Delimiter.INPUT, 
+                    new LabeledData<>("ip", ip),
+                Delimiter.OUTPUT, 
+                    new LabeledData<>("op", result));
+    }
+
+    int recursive(int[] ip) {
+        return 0;
+    }
+
+    int tabulation(int[] ip) {
+        return 0;
+    }
+
+    int memoization(int[] ip) {
+        return 0;
+    }
+
+    public static void main(String[] args) {
+        int[] ip = {1,2,3,4,5};
+        
+        new __(ip, Methods.RECURSION, true);
+        new __(ip, Methods.TABULATION, false);
+        new __(ip, Methods.MEMOIZATION, false);
+
+    }
+
