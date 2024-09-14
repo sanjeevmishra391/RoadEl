@@ -4,8 +4,8 @@ package Dynamic;
 
 import roadel.LabeledData;
 import roadel.Utility;
-import roadel.Utility.Delimiter;
 import roadel.Utility.Methods;
+import roadel.Utility.Delimiter;
 
 public class FrogJump {
     int result;

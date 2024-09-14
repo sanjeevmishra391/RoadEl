@@ -13,8 +13,9 @@ import java.util.Arrays;
 
 import roadel.LabeledData;
 import roadel.Utility;
-import roadel.Utility.Delimiter;
 import roadel.Utility.Methods;
+import roadel.Utility.Delimiter;
+
 
 public class Catalan {
     long result;
