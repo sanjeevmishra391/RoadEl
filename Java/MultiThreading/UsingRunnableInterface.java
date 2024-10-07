@@ -12,7 +12,6 @@ public class UsingRunnableInterface implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
     }
 
     public static void main(String[] args) {
