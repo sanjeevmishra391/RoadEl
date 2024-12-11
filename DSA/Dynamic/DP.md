@@ -107,6 +107,52 @@ Fibonacci Series using Dynamic Programming:
 
 </details>
 
+## Standard Problems
+
+### 1. 0/1 Knapsack Problem
+Given N items where each item has some weight and profit associated with it and also given a bag with capacity W, [i.e., the bag can hold at most W weight in it]. The task is to put the items into the bag such that the sum of profits associated with them is the maximum possible.
+
+**Note**: The constraint here is we can either put an item completely into the bag or cannot put it at all [It is not possible to put a part of an item into the bag].
+
+> Other knapsack programs are **Unbounded Knapsack** and **Fractional Knapsack** (uses greedy approach) 
+
+**Approach:**
+- If the weight of current item is less than the current capacity then we have a choice to either take the item or not to take the item. Then move to next item.
+- Else do not take the current item
+
+**Problems:**
+
+1. [0/1 KnapSack](./KnapSack.java)
+2. [Subset Sum](./SubsetSum.java)
+3. [Equal Sum Partition](./EqualSumPartition.java)
+4. [Count Subsets with a Target](./CountSubsetSum.java)
+5. [Minimum Subset Sum Difference](./MinimumSubsetSumDiff.java)
+6. [Count of number of subsets with give difference](./NumberOfSubsetsWithDiff.java)
+7. [Target Sum](./TargetSum.java)
+
+### 2. Unbounded Knapsack Problem
+
+Same problem as 0/1 Knapsack. The only difference is that we can select one item as many times we want.
+
+**Problems**
+
+1. [Unbounded Knapsack](./UnboundedKnapsack.java)
+2. [Rod Cutting](./RodCutting.java)
+3. [Coin Change Minimum # Coin](./CoinChangeMinCoins.java)
+4. [Coin Change : Max Ways](./CoinChangeMaxWays.java)
+
+### 3. Longest Common Subsequence (LCS)
+
+Given two strings, **s1** and **s2**, the task is to find the length of the Longest Common Subsequence. If there is no common subsequence, return 0.
+
+A subsequence is a string generated from the original string by deleting 0 or more characters and without changing the relative order of the remaining characters. For example , subsequences of “ABC” are “”, “A”, “B”, “C”, “AB”, “AC”, “BC” and “ABC”.
+
+In general a string of length n has 2<sup>n</sup> subsequences.
+
+**Problems**
+
+1. [Longest Common Subsequence](./LongestCommonSubsequence.java)
+
 ## Patterns
 
 Few patterns that can be found in different problems

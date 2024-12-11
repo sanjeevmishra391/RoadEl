@@ -1,5 +1,7 @@
 package Dynamic;
 
+import java.util.Arrays;
+
 import roadel.LabeledData;
 import roadel.Utility;
 import roadel.Utility.Methods;
@@ -8,7 +10,7 @@ import roadel.Utility.Delimiter;
 public class SubsetSum {
     boolean result;
     Methods method;
-    int dp[];
+    int dp[][];
 
     SubsetSum(int[] ip, int sum, Methods method, boolean use) {
         this.method = method;
@@ -18,14 +20,16 @@ public class SubsetSum {
         } else if (method == Methods.TABULATION && use) {
             result = tabulation(ip, sum, ip.length);
         } else if (method == Methods.MEMOIZATION && use) {
-            dp = new int[ip.length + 1];
-            result = memoization(ip, sum);
+            dp = new int[ip.length + 1][sum+1];
+            for(int row[] : dp)
+                Arrays.fill(row, -1);
+            result = memoization(ip, sum, ip.length-1, dp);
         }
         
         if(use)
             Utility.printRes(this.method, 
                 Delimiter.INPUT, 
-                    new LabeledData<>("ip", ip),
+                    new LabeledData<>("arr", ip),
                     new LabeledData<>("sum", sum),
                 Delimiter.OUTPUT, 
                     new LabeledData<>("op", result));
@@ -52,8 +56,7 @@ public class SubsetSum {
         for (int i = 1; i <= sum; i++)
             subset[i][0] = false;
 
-        // Fill the subset table in bottom
-        // up manner
+        // Fill the subset table in bottom - up manner
         for (int i = 1; i <= sum; i++) {
             for (int j = 1; j <= n; j++) {
                 subset[i][j] = subset[i][j - 1];
@@ -67,8 +70,24 @@ public class SubsetSum {
         return subset[sum][n];
     }
 
-    boolean memoization(int[] ip, int sum) {
-        return false;
+    boolean memoization(int[] set, int sum, int idx, int dp[][]) {
+        if(idx<0 ||  sum<0)
+            return false;
+
+        if(sum == 0) {
+            dp[idx][sum] = 1;
+            return true;
+        }
+
+        if(dp[idx][sum] != -1)
+            return dp[idx][sum] == 1;
+
+        if(set[idx] <= sum) {
+            dp[idx][sum] = (memoization(set, sum-set[idx], idx-1, dp) || memoization(set, sum, idx-1, dp)) ? 1 : 0;
+        } else {
+            dp[idx][sum] = memoization(set, sum, idx-1, dp) ? 1 : 0;
+        }
+        return dp[idx][sum] == 1;
     }
 
     public static void main(String[] args) {
@@ -77,7 +96,7 @@ public class SubsetSum {
         
         new SubsetSum(ip, sum, Methods.RECURSION, true);
         new SubsetSum(ip, sum, Methods.TABULATION, true);
-        new SubsetSum(ip, sum, Methods.MEMOIZATION, false);
+        new SubsetSum(ip, sum, Methods.MEMOIZATION, true);
 
     }
 }

@@ -21,5 +21,6 @@ The java.lang.Throwable class is the root class of Java Exception hierarchy inhe
 - Finally is called even if no exception occurs
 - The Java ```throw``` keyword is used to throw an exception explicitly.
 - If we throw unchecked exception from a method, it is must to handle the exception or declare in throws clause.
+- Checked exceptions must be handled or declared.
 - If the superclass method does not declare an exception, subclass overridden method cannot declare the checked exception but it can declare unchecked exception. [⤴︎](https://www.javatpoint.com/exception-handling-with-method-overriding)
 - If the superclass method declares an exception, subclass overridden method can declare same, subclass exception or no exception but cannot declare parent exception.

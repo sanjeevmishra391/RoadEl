@@ -15,12 +15,12 @@ import roadel.Utility;
 import roadel.Utility.Methods;
 import roadel.Utility.Delimiter;
 
-public class CoinChange {
+public class CoinChangeMinCoins {
     int result;
     Methods method;
     static int dp[][];
 
-    CoinChange(int[] coins, int amount, Methods method, boolean use) {
+    CoinChangeMinCoins(int[] coins, int amount, Methods method, boolean use) {
         this.method = method;
 
         if (method == Methods.RECURSION && use) {
@@ -98,9 +98,9 @@ public class CoinChange {
         int[] coins = {2, 3, 5};
         int amount = 6;
         
-        new CoinChange(coins, amount, Methods.RECURSION, false);
-        new CoinChange(coins, amount, Methods.TABULATION, true);
-        new CoinChange(coins, amount, Methods.MEMOIZATION, true);
+        new CoinChangeMinCoins(coins, amount, Methods.RECURSION, true);
+        new CoinChangeMinCoins(coins, amount, Methods.TABULATION, true);
+        new CoinChangeMinCoins(coins, amount, Methods.MEMOIZATION, true);
 
     }
 }

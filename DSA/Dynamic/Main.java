@@ -16,7 +16,7 @@ class Main {
     }
     
     return dp[ip.length-1];
-}
+  }
   
   public static void main(String args[]) {
     try (Scanner sc = new Scanner(System.in)) {

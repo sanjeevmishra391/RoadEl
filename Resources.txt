@@ -11,8 +11,13 @@ https://bytebytego.com/courses/system-design-interview/scale-from-zero-to-millio
 Karlo : https://www.freecodecamp.org/learn/data-analysis-with-python/
 
 ------
-https://www.google.com/about/careers/applications/jobs/results/80827681507025606-software-engineer-ii-full-stack-core?location=India&degree=BACHELORS&employment_type=FULL_TIME&sort_by=date&target_level=EARLY
 
-https://www.google.com/about/careers/applications/jobs/results/77749807682069190-software-engineer-youtube?location=India&degree=BACHELORS&employment_type=FULL_TIME&sort_by=date&target_level=EARLY&page=2
-
-
+Maximum Value at a Given Index in a Bounded Array
+Kth Missing Positive Number
+Minimum Number of Days to Make m Bouquets
+Find the Smallest Divisor Given a Threshold
+Divide Chocolate
+Capacity To Ship Packages In N Days
+Koko Eating Bananas
+Minimize Max Distance to Gas Station
+Split Array Largest Sum
