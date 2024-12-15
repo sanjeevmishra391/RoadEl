@@ -21,3 +21,10 @@ Capacity To Ship Packages In N Days
 Koko Eating Bananas
 Minimize Max Distance to Gas Station
 Split Array Largest Sum
+
+
+Tell me about a time when you had to deal with a difficult team member. How did you handle the situation?
+Describe a project you worked on that didn't go as planned. What did you learn from the experience?
+Describe a time when you had to prioritize multiple tasks with conflicting deadlines. How did you manage your time?
+Tell me about a time when you had to adapt to a new and unfamiliar situation. How did you approach it?
+Describe a challenging situation you faced in a previous job. How did you overcome it?

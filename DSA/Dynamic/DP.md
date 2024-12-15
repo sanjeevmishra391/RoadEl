@@ -152,6 +152,26 @@ In general a string of length n has 2<sup>n</sup> subsequences.
 **Problems**
 
 1. [Longest Common Subsequence](./LongestCommonSubsequence.java)
+2. [Longest Common Substring](./LongestCommonSubstring.java)
+3. [Print Longest Common Subsequence](./LongestCommonSubsequencePrint.java)
+4. [Minimum insertions and deletions needed to convert String A to B](./MinimumInsertionAndDeletion.java)
+5. [Shortest Common Supersequence](./ShortestCommonSupersequence.java)
+6. [Longest Palindromic Subsequence](./LongestPalindromicSubsequence.java)
+7. [Minimum Deletions needed to make string palindromic](./MinimumDeletionToMakePalindrome.java)
+8. [Print Shortest Common Supersequence](./ShortestCommonSupersequencePrint.java)
+9. [Longest Repeating Subsequence](./LongestRepeatingSubsequence.java)
+
+
+### 3. Matrix Chain Multiplication
+
+Given the dimension of a sequence of matrices in an array arr[], where the dimension of the ith matrix is (arr[i-1] * arr[i]), the task is to find the most efficient way to multiply these matrices together such that the total number of element multiplications is minimum. When two matrices of size m x n and n x p when multiplied, they generate a matrix of size m x p and the number of multiplications performed is m x n x p.
+
+**Problems**
+
+1. [Matrix Chain Multiplication](./MatrixChainMultiplication.java)
+2. [Palindrome Partitioning](./PalindromePartitioning.java)
+3. [Evaluate Expression to True](./EvaluationExpressionToTrue.java)
+4. [Scrambled String](./ScrambledStrings.java)
 
 ## Patterns
 

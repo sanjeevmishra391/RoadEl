@@ -218,3 +218,4 @@ In a **directed graph**, a Strongly Connected Component is a subset of vertices 
 [Number of Operations to Make Network Connected](https://leetcode.com/problems/number-of-operations-to-make-network-connected/description/)   
 [Accounts Merge](https://leetcode.com/problems/accounts-merge/description/)  
 [Making a Large Island](https://leetcode.com/problems/making-a-large-island/description/)  
+[Detonate the Maximum Bombs](https://leetcode.com/problems/detonate-the-maximum-bombs/description/)  
