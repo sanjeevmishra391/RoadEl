@@ -250,6 +250,20 @@ These are used to maintain state consistency in the database, both before and af
 - **Recovery Complexity**: ACID properties introduce complexities in recovery and backup strategies.
 - **Trade-off with Availability**: Strict adherence to ACID properties may affect system availability in certain situations.
 
+### CAP Theorem
+The CAP theorem states that a distributed database system can provide at most two out of three guarantees simultaneously:
+
+- Consistency (C):
+    All nodes in a distributed system have the same, up-to-date data at any given time.
+    If a query is made, it will always return the most recent write.
+
+- Availability (A):
+    Every request to the system receives a response (either success or failure), even if some nodes are down.
+
+- Partition Tolerance (P):
+    The system continues to operate despite network partitions (communication breakdowns between nodes).
+
+
 ## Deadlock
 [⤴︎](https://www.scaler.com/topics/dbms/deadlock-in-dbms/)
 
@@ -385,6 +399,44 @@ BEGIN
 END; 
 /
 ```
+
+## Queries
+
+1. Write a query to find the second-highest salary.
+    1. Using subqueries
+        ```sql
+        SELECT MAX(salary) AS second_highest_salary
+        FROM employees
+        WHERE salary < (SELECT MAX(salary) FROM employees);
+        ```
+        ```sql
+        SELECT name, salary  
+        FROM employee  
+        WHERE salary = (  
+            SELECT MAX(salary)  
+            FROM employee  
+            WHERE salary < (SELECT MAX(salary) FROM employee)  
+        );
+        ```
+    2. Using LIMIT
+        ```sql
+        select * from employee 
+        group by salary 
+        order by  salary desc limit 1,1;
+        ```
+
+        ```sql
+        SELECT salary 
+        FROM employee 
+        ORDER BY salary desc limit n-1,1
+        ```
+
+        ```sql
+        SELECT DISTINCT salary
+        FROM employees
+        ORDER BY salary DESC
+        LIMIT 1 OFFSET (n-1);
+        ```
 
 ## Resources
 

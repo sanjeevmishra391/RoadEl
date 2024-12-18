@@ -46,4 +46,64 @@ else
     > A static field declared by T is assigned.  
     > A static field declared by T is used and the field is not a constant variable.  
     > T is a top-level class, and an assert statement lexically nested within T is executed. 
+- hashCode() method returns the hash code for the Method class object.
 
+- Features Introduced in Java 8 :
+    - Stream API
+    - Lambda Expressions : A lambda expression in Java is a concise way to represent an anonymous function—a function without a name. Introduced in Java 8, it enables functional programming features and is widely used with the Stream API and functional interfaces like Runnable, Callable, and Comparator
+    - Functional Interface : Interface with a single abstract method which can be implemented using lambda expression.
+    - Date/Time API
+    - Comparable and Comparator
+    - Interface Default and Static Methods : interfaces can have static and default methods that, despite being declared in an interface, have a defined behavior.
+    - Method References
+        - Reference to a Static Method ```anyMatch(User::isRealUser)```
+        - Reference to an Instance Method ```anyMatch(user::isLegalName)```
+        - Reference to an Instance Method of an Object of a Particular Type ```filter(String::isEmpty)```
+        - Reference to a Constructor ```map(User::new)```
+    - Optional<T> : Optional<T> class can help to handle situations where there is a possibility of getting the NPE. It works as a container for the object of type T. It can return a value of this object if this value is not a null. When the value inside this container is null, it allows doing some predefined actions instead of throwing NPE.
+- In Java, the transient and volatile keywords are used to improve the reliability and efficiency of applications. They are used to: 
+    - The transient keyword prevents sensitive data from being serialized, ensuring it remains private
+    - The volatile keyword ensures that all threads have access to the most up-to-date value
+    - The transient and volatile keywords help to write robust and thread-safe code
+
+    - Transient: Used with instance variables to exclude them from serialization
+    - Volatile: Used with variables to indicate that the JVM and compiler always read its value from main memory
+    
+    Differences between transient and volatile
+    - transient cannot be used with the static keyword, but volatile can 
+    - transient variables are initialized with default values during de-serialization 
+    - volatile ensures visibility and atomicity for simple read and write operations 
+
+
+### Stream API
+
+The Stream API in Java, introduced in Java 8, is a powerful tool for working with sequences of elements. It allows you to perform operations like filtering, mapping, and reducing on collections or arrays in a declarative, functional programming style. Streams enable efficient processing of data by supporting lazy evaluation, parallel execution, and concise syntax.
+
+```java
+import java.util.*;
+import java.util.stream.*;
+
+public class StreamExample {
+    public static void main(String[] args) {
+        // Create a list of numbers
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+        // Filter even numbers, square them, and collect into a list
+        List<Integer> evenSquares = numbers.stream()
+                                           .filter(n -> n % 2 == 0) // Filter even numbers
+                                           .map(n -> n * n)         // Square them
+                                           .collect(Collectors.toList()); // Collect results
+
+        System.out.println("Even squares: " + evenSquares);
+    }
+}
+```
+
+![Maps](image.png)
+
+### Resources
+
+- [JDK vs JRE vs JVM](https://www.geeksforgeeks.org/differences-jdk-jre-jvm/)
+- [Internal Working of Java HashMap](https://www.javatpoint.com/working-of-hashmap-in-java)
+- [Integer vs int](https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/int-vs-Integer-java-difference-comparison-primitive-object-types#:~:text=The%20key%20difference%20between%20the,included%20in%20the%20Java%20API.)
+- [Comparable vs Comparator](https://www.javatpoint.com/difference-between-comparable-and-comparator)

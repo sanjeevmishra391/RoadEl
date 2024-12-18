@@ -177,6 +177,16 @@ The Runnable interface should be implemented by any class whose instances are in
 
 **public void run()**: is used to perform action for a thread.
 
+### Difference between Thread class and Runnable interface
+
+| Aspect |	Runnable Interface	| Thread Class |
+| ------ | -------------------- | ------------ |
+| Inheritance |	Allows your class to extend another class while still enabling multithreading. |	Cannot extend any other class because it already extends the Thread class. |
+| Code Separation |	Encourages separation of task logic from the thread management code. |	Combines task logic and thread management, which can lead to less modular code. |
+| Reusability |	The same Runnable instance can be executed by multiple threads. |	A Thread instance cannot be reused once it has completed execution. |
+| Memory Overhead |	Lightweight, as no additional thread-related methods are inherited. |	Slightly heavier since the class inherits all Thread methods. |
+| Flexibility |	Recommended for thread pool management with ExecutorService. |	Not ideal for use with ExecutorService. |
+
 ### Starting a thread:
 The ```start()``` method of Thread class is used to start a newly created thread. It performs the following tasks:
 
