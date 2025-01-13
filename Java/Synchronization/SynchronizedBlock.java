@@ -1,6 +1,6 @@
 package Java.Synchronization;
 
-class Table {
+class TableBlock {
     void printTable(int n) {
         synchronized(this) {
             for(int i=1; i<n; i++) {
@@ -15,10 +15,10 @@ class Table {
     }
 }
 
-class MyThread extends Thread {
-    Table t;
+class MyThreadBlock extends Thread {
+    TableBlock t;
 
-    MyThread(Table t) {
+    MyThreadBlock(TableBlock t) {
         this.t = t;
     }
 
@@ -27,10 +27,10 @@ class MyThread extends Thread {
     }
 }
 
-class MyThreadAnother extends Thread {
-    Table t;
+class MyThreadAnotherBlock extends Thread {
+    TableBlock t;
 
-    MyThreadAnother(Table t) {
+    MyThreadAnotherBlock(TableBlock t) {
         this.t = t;
     }
 
@@ -41,9 +41,9 @@ class MyThreadAnother extends Thread {
 
 public class SynchronizedBlock {
     public static void main(String[] args) {
-        Table obj = new Table();
-        MyThread t1 = new MyThread(obj);
-        MyThreadAnother t2 = new MyThreadAnother(obj);
+        TableBlock obj = new TableBlock();
+        MyThreadBlock t1 = new MyThreadBlock(obj);
+        MyThreadAnotherBlock t2 = new MyThreadAnotherBlock(obj);
 
         t1.start();
         t2.start();  

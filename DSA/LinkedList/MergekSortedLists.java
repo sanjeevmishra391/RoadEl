@@ -5,15 +5,8 @@ import java.util.PriorityQueue;
 public class MergekSortedLists {
     
     public ListNode mergeKLists(ListNode[] lists) {
-        ListNode[] itr = new ListNode[lists.length];
-        for(int i=0; i<lists.length; i++) {
-            itr[i++] = lists[0];
-        }
-
         ListNode res = null, head = null;
-        boolean allNull = false;
-
-        while(!allNull) {
+        while(true) {
             int idx = 0, svalue = Integer.MAX_VALUE, nullCount = 0;
             for(int j=0; j<lists.length; j++) {
                 if(lists[j] == null)

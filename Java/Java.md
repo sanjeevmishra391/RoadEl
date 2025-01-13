@@ -107,3 +107,4 @@ public class StreamExample {
 - [Internal Working of Java HashMap](https://www.javatpoint.com/working-of-hashmap-in-java)
 - [Integer vs int](https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/int-vs-Integer-java-difference-comparison-primitive-object-types#:~:text=The%20key%20difference%20between%20the,included%20in%20the%20Java%20API.)
 - [Comparable vs Comparator](https://www.javatpoint.com/difference-between-comparable-and-comparator)
+- [Double-Checked Locking](https://refactoring.guru/java-dcl-issue)

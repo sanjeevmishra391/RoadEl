@@ -1,4 +1,4 @@
-package SystemDesign.DesignPatterns.Decorators;
+package SystemDesign.DesignPatterns.Structure.Decorators;
 
 public interface Coffee {
     String getDescription();

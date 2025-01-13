@@ -1,4 +1,4 @@
-package SystemDesign.DesignPatterns.Decorators;
+package SystemDesign.DesignPatterns.Structure.Decorators;
 
 // Add milk to the coffee
 class MilkDecorator extends CoffeeDecorator {

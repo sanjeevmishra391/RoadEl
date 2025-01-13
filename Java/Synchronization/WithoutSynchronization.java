@@ -1,6 +1,6 @@
 package Java.Synchronization;
 
-class Table {
+class TableWithout {
     void printTable(int n) {
         for(int i=1; i<5; i++) {
             try {
@@ -12,10 +12,10 @@ class Table {
     }
 }
 
-class MyThread extends Thread {
-    Table t;
+class MyThreadWithout extends Thread {
+    TableWithout t;
 
-    MyThread(Table t) {
+    MyThreadWithout(TableWithout t) {
         this.t = t;
     }
 
@@ -24,10 +24,10 @@ class MyThread extends Thread {
     }
 }
 
-class MyThreadAnother extends Thread {
-    Table t;
+class MyThreadAnotherWithout extends Thread {
+    TableWithout t;
 
-    MyThreadAnother(Table t) {
+    MyThreadAnotherWithout(TableWithout t) {
         this.t = t;
     }
 
@@ -38,9 +38,9 @@ class MyThreadAnother extends Thread {
 
 public class WithoutSynchronization {
     public static void main(String[] args) {
-        Table obj = new Table();
-        MyThread t1 = new MyThread(obj);
-        MyThreadAnother t2 = new MyThreadAnother(obj);
+        TableWithout obj = new TableWithout();
+        MyThreadWithout t1 = new MyThreadWithout(obj);
+        MyThreadAnotherWithout t2 = new MyThreadAnotherWithout(obj);
 
         t1.start();
         t2.start();  

@@ -1,30 +1,59 @@
-https://ksat.me/a-plain-english-introduction-to-cap-theorem
-
-https://news.ycombinator.com/
-
-https://dev.to/karanpratapsingh/system-design-the-complete-course-10fo
-
-https://github.com/ashishps1/awesome-system-design-resources
-
-https://bytebytego.com/courses/system-design-interview/scale-from-zero-to-millions-of-users
-
-Karlo : https://www.freecodecamp.org/learn/data-analysis-with-python/
-
-------
-
-Maximum Value at a Given Index in a Bounded Array
-Kth Missing Positive Number
-Minimum Number of Days to Make m Bouquets
-Find the Smallest Divisor Given a Threshold
-Divide Chocolate
-Capacity To Ship Packages In N Days
-Koko Eating Bananas
-Minimize Max Distance to Gas Station
-Split Array Largest Sum
+1. DSA
+    https://neetcode.io/practice
+    https://youtube.com/playlist?list=PL_z_8CaSLPWekqhdCPmFohncHwz8TY2Go&si=OjD0s1TCuJxsZFJf
+    https://youtube.com/playlist?list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn&si=27e2sl5-zBh2NmPP
+2. System design > Basics and Design Patterns
+    https://github.com/ashishps1/awesome-system-design-resources
+    https://bytebytego.com/courses/system-design-interview/scale-from-zero-to-millions-of-users
+    https://dev.to/karanpratapsingh/system-design-the-complete-course-10fo
+3. DBMS & Queries
+4. Programming Language (Java)
+5. SDLC 
+6. Behaviour Questions
+    Tell me about a time when you had to deal with a difficult team member. How did you handle the situation?
+    Describe a project you worked on that didn't go as planned. What did you learn from the experience?
+    Describe a time when you had to prioritize multiple tasks with conflicting deadlines. How did you manage your time?
+    Tell me about a time when you had to adapt to a new and unfamiliar situation. How did you approach it?
+    Describe a challenging situation you faced in a previous job. How did you overcome it?
+7. Projects
+    React, JS, 
 
 
-Tell me about a time when you had to deal with a difficult team member. How did you handle the situation?
-Describe a project you worked on that didn't go as planned. What did you learn from the experience?
-Describe a time when you had to prioritize multiple tasks with conflicting deadlines. How did you manage your time?
-Tell me about a time when you had to adapt to a new and unfamiliar situation. How did you approach it?
-Describe a challenging situation you faced in a previous job. How did you overcome it?
+Additional To Do
+https://www.freecodecamp.org/learn/data-analysis-with-python/
+
+BLOG
+1. Engineering at Meta - https://lnkd.in/e8tiSkEv
+2. Google Research - https://ai.googleblog.com/
+3. Google Cloud Blog - https://lnkd.in/enNviCF8
+4. AWS Architecture Blog - https://lnkd.in/eEchKJif
+5. All Things Distributed - https://lnkd.in/emXaQDaS
+6. The Nextflix Tech Blog - https://lnkd.in/efPuR39b
+7. LinkedIn Engineering Blog - https://lnkd.in/ehaePQth
+8. Uber Engineering Blog - https://eng.uber.com/
+9. Engineering at Quora - https://lnkd.in/em-WkhJd
+10. Pinterest Engineering - https://lnkd.in/esBTntjq
+11. Lyft Engineering Blog - https://eng.lyft.com/
+12. Twitter Engineering Blog - https://lnkd.in/evMFNhEs
+13. Dropbox Engineering Blog - https://dropbox.tech/
+14. Spotify Engineering - https://lnkd.in/eJerVRQM
+15. Github Engineering - https://lnkd.in/eCADWt8x
+16. Instagram Engineering - https://lnkd.in/e7Gag8m5
+17. Databricks - https://lnkd.in/eXcBj37a
+18. Canva Engineering Blog - https://canvatechblog.com/
+19. Etsy Engineering - https://lnkd.in/eddzzKRt
+20. Booking.com Tech Blog - https://blog.booking.com/
+21. Expedia Technology - https://lnkd.in/ehjuBE5J
+22. The Airbnb Tech Blog - https://lnkd.in/emGrJbGM
+23. Stripe Engineering Blog - https://lnkd.in/em6Svgyx
+24. Ebay Tech Blog - https://tech.ebayinc.com/
+25. Flickr's Tech Blog - https://code.flickr.net/
+26. Hubspot Product and Engineering Blog - https://lnkd.in/eRGZkBd4
+27. Heroku Engineering Blog - https://lnkd.in/evgctQjh
+28. Discord Engineering and Design - https://lnkd.in/evY4gpUA
+29. Zomato - https://lnkd.in/e9gf3APD
+30. Hotstar - https://blog.hotstar.com/
+31. Swiggy - https://bytes.swiggy.com/
+32. Shopify Engineering - https://lnkd.in/evvnqQTj
+33. Microsoft Tech Blogs - https://lnkd.in/etw_7_bN
+

@@ -1,4 +1,4 @@
-package SystemDesign.DesignPatterns.Decorators;
+package SystemDesign.DesignPatterns.Structure.Decorators;
 
 // The base decorator that implements the Coffee interface and wraps a Coffee object
 public abstract class CoffeeDecorator implements Coffee {
