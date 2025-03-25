@@ -149,6 +149,7 @@ A spanning tree is a subset of Graph G, such that all the vertices are connected
 - **Cayley's Formula**: It states that the number of spanning trees in a complete graph with N vertices is N^{N-2}.
 
 ## Minimum Spanning Tree
+[↗︎](./MinimumSpanningTree.java)
 
 The weight of a spanning tree is determined by the sum of weight of all the edge involved in it.
 

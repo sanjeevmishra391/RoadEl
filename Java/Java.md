@@ -1,5 +1,133 @@
-### Difference between final, finally and finalize
+## Building Blocks
 
+### Comments
+
+```java
+// single line comment
+
+/*
+* Multiple line comment
+*/
+
+/**
+ * 
+ * Java doc comment, used for generating documentation
+ * @see https://www.baeldung.com/javadoc
+ * 
+ * /
+```
+**How to generate javadoc**
+```
+javadoc -d JavaDoc Calculator.java
+```
+[Example for Javadoc](./Calculator.java)  
+
+### Defining Class and Files
+
+- At most one public class can be in a java file.
+- If there is any public class then it should be same as file name
+
+### Writing main() method
+
+- Program stars from ```public static void main(String[] args)``` method call.
+- After compilation generates ```.class``` file.
+- The variable name ```args``` hints that this list contains values that were read in (arguments) when the JVM started.
+
+### Packages and Imports
+- To run the java file use below commands
+    ```bash
+        javac filename.java
+        java filename {arguments}
+
+        // other ways of compiling
+        javac packagea/ClassA.java packageb/ClassB.java 
+    ```
+- Java puts classes in packages.
+- Packages are used to avoid naming conflicts
+- You have to import packages in order to use the files in the package.
+    ```java
+    import java.util.*; // all the files in the package
+    import java.util.Random; // only a single java class
+    ```
+- If you explicitly import a class name, it takes precedence over any wildcards present. 
+- In case of conflict you could in this way
+    ```java
+    import java.util.Date;
+    public class Conflicts {
+        Date date;
+        java.sql.Date sqlDate;
+    }
+    ```
+- ```java.lang``` package is imported by default. It contains System, Wrappper, Object, Runtime, Thread, Compiler classes.
+- If no package is defined then it's called **default package**.
+- To defined a package use below format.  
+    ```package dbms;```
+
+### Creating Objects
+- Use ```new``` keyword to create the object.
+    ```java
+    Animal dog = new Animal();
+    ```
+- ```Animal()``` is the constructor which is used to initialize the object.
+- The name of the constructor matches the name of the class, and there's no return type.
+    ```java
+    public void Chick() { } // NOT A CONSTRUCTON
+    ```
+- If you do not create any constructor then compiler will provide you a **default constructor** which do not accept any arguments. This constructor is used to initiase primitive variables with default values.
+
+- The constructor runs after all fields and instance initializer blocks have run. Order matters.
+    ```java
+    { System.out.println(name); }  // DOES NOT COMPILE
+    private String name = "Fluffy";
+    ```
+
+### Primitive Types
+
+Java has eight built-in data types, referred to as the Java primitive types.
+
+| Type | Description | Default | Size | Example | Range of values |
+| ---- | ----------- | ------- | ---- | ------- | --------------- |
+| boolean  |	true or false |	false |	8 bits 	| true, false 	| true, false |
+| byte |	twos-complement integer |	0 | 	8 bits | 	(none) 	| -128 to 127 |
+| char | 	Unicode character |	\u0000 |	16 bits |	‘a’, ‘\u0041’, ‘\101’, ‘\\’, ‘\’, ‘\n’, ‘β’ 	| characters representation of ASCII values 0 to 255 |
+| short | 	twos-complement integer | 	0 | 	16 bits | 	(none) | 	-32,768 to 32,767 |
+| int |	twos-complement intger |	0 	| 32 bits |	-2,-1,0,1,2 |	-2,147,483,648 to 2,147,483,647 |
+| long |	twos-complement integer | 	0 |	64 bits |	-2L,-1L,0L,1L,2L |	-9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 |
+| float |	IEEE 754 floating point |	0.0 |	32 bits |	1.23e100f , -1.23e-100f , .3f ,3.14F |	upto 7 decimal digits |
+| double |	IEEE 754 floating point |	0.0 |	64 bits |	1.23456e300d , -123456e-300d , 1e1d |	upto 16 decimal digits |
+
+- Use L/l at the end of literal to mark it as long and use f/F as the end of literal to mark it as float type.
+
+### Variables and Identifiers
+- The name must begin with a letter or the symbol $ or _.
+- Local variables must be initialized before use. 
+    ```java
+    int q;
+    System.out.println(q); // compile time error
+    ```
+
+    ```java
+    public void findAnswer(boolean check) {
+        int answer;
+        int onlyOneBranch;
+        if (check) {
+            onlyOneBranch = 1;
+            answer = 1;
+        } else {
+            answer = 2;
+        }
+        System.out.println(answer);
+        System.out.println(onlyOneBranch); // DOES NOT COMPILE
+    }
+    ```
+- Instance and class variables do not require you to initialize them.
+- Scope
+    - Local variables—in scope from declaration to end of block
+    - Instance variables—in scope from declaration until object garbage collected
+    - Class variables—in scope from declaration until program ends
+
+
+### Difference between final, finally and finalize
 
 | Sr. no. | 	Key |	final |	finally	| finalize |
 | ------- | ------- | ------- | ------- | -------- |
