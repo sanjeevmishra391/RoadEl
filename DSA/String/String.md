@@ -1,3 +1,66 @@
+# String
+
+## Pattern Recognition Triggers
+- "Longest substring / subarray with condition" → Sliding Window
+- "Anagram / permutation in string" → Sliding Window + frequency map
+- "Pattern in text" → KMP or Rabin-Karp
+- "Palindrome" → Two Pointers or DP
+- "Edit/transform one string to another" → DP (Edit Distance)
+- "Common prefix/suffix" → Trie or sorting trick
+
+## Key String Techniques
+
+### Frequency Map (HashMap / int[26])
+```java
+// Use int[26] for lowercase letters — faster than HashMap
+int[] freq = new int[26];
+for (char c : s.toCharArray()) freq[c - 'a']++;
+```
+
+### Two Pointers for Palindrome Check
+```java
+int left = 0, right = s.length() - 1;
+while (left < right) {
+    if (s.charAt(left) != s.charAt(right)) return false;
+    left++; right--;
+}
+return true;
+```
+
+### StringBuilder for Mutations
+- Never concatenate strings in a loop: `s += char` is O(n²)
+- Use `StringBuilder` → O(n)
+
+## Complexity of Common String Operations (Java)
+| Operation | Time |
+|---|---|
+| `s.charAt(i)` | O(1) |
+| `s.substring(i, j)` | O(j-i) |
+| `s.equals(t)` | O(n) |
+| `s + t` (concatenation) | O(n+m) |
+| `StringBuilder.append` | O(1) amortized |
+
+## Key Interview Problems
+
+| Problem | Approach | Key Insight |
+|---|---|---|
+| Valid Anagram | Frequency map | int[26] comparison |
+| Longest Substring Without Repeating | Sliding Window | HashSet, shrink on duplicate |
+| Minimum Window Substring | Sliding Window | Two frequency maps, `have` vs `need` counter |
+| Group Anagrams | Sorting key | Sort each word → use as HashMap key |
+| Longest Palindromic Substring | Expand around center | Try each char and each pair as center |
+| Encode/Decode Strings | Length prefix | Prepend `length#` before each string |
+| Longest Common Prefix | Vertical scan | Compare char by char across all strings |
+| Valid Palindrome II | Two pointers | On mismatch, try skipping left OR right char |
+| Word Break | DP + Trie | dp[i] = can we form s[0..i] from dictionary |
+
+## Common Mistakes
+- Using `==` to compare strings (compares reference, not value) — always use `.equals()`
+- `s.substring()` creates a new String object — avoid in tight loops
+- Integer overflow in Rabin-Karp rolling hash — use modulo with a large prime
+
+---
+
 ## Pattern Searching
 
 ### 1. Naive Pattern Searching algorithm

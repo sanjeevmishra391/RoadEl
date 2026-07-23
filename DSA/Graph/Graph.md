@@ -1,4 +1,87 @@
-# Graph 
+# Graph
+
+## Pattern Recognition Triggers
+
+| Trigger | Algorithm |
+|---|---|
+| Shortest path, unweighted | BFS |
+| Shortest path, weighted, no negative | Dijkstra |
+| Shortest path, negative weights | Bellman-Ford |
+| All-pairs shortest path | Floyd-Warshall |
+| Cycle detection (directed) | DFS with visited/in-stack sets |
+| Cycle detection (undirected) | Union-Find or DFS |
+| Dependency ordering | Topological Sort (Kahn's or DFS) |
+| Connected components | BFS/DFS or Union-Find |
+| Minimum spanning tree | Prim's or Kruskal's |
+
+## Graph Representation Tradeoffs
+| | Adjacency Matrix | Adjacency List |
+|---|---|---|
+| Space | O(V²) | O(V + E) |
+| Check edge (u,v) | O(1) | O(degree) |
+| Iterate neighbors | O(V) | O(degree) |
+| Best for | Dense graphs | Sparse graphs (most interview problems) |
+
+## BFS Template (shortest path / level order)
+```java
+Queue<Integer> queue = new LinkedList<>();
+boolean[] visited = new boolean[n];
+queue.offer(start);
+visited[start] = true;
+int distance = 0;
+while (!queue.isEmpty()) {
+    int size = queue.size();
+    for (int i = 0; i < size; i++) {
+        int node = queue.poll();
+        // process node
+        for (int neighbor : graph.get(node)) {
+            if (!visited[neighbor]) {
+                visited[neighbor] = true;
+                queue.offer(neighbor);
+            }
+        }
+    }
+    distance++;
+}
+```
+
+## DFS Template (cycle detection, path finding)
+```java
+// visited: already fully processed
+// inStack: currently in recursion stack (for directed cycle detection)
+boolean[] visited = new boolean[n];
+boolean[] inStack = new boolean[n];
+
+boolean hasCycle(int node) {
+    visited[node] = true;
+    inStack[node] = true;
+    for (int neighbor : graph.get(node)) {
+        if (!visited[neighbor] && hasCycle(neighbor)) return true;
+        if (inStack[neighbor]) return true;  // back edge = cycle
+    }
+    inStack[node] = false;
+    return false;
+}
+```
+
+## Complexity Cheat Sheet
+| Algorithm | Time | Space |
+|---|---|---|
+| BFS / DFS | O(V + E) | O(V) |
+| Dijkstra (min-heap) | O((V + E) log V) | O(V) |
+| Bellman-Ford | O(V × E) | O(V) |
+| Floyd-Warshall | O(V³) | O(V²) |
+| Topological Sort | O(V + E) | O(V) |
+| Kruskal's MST | O(E log E) | O(V) |
+| Prim's MST | O((V + E) log V) | O(V) |
+
+## Common Mistakes
+- Not marking nodes **visited before** adding to queue (causes duplicates in BFS)
+- Confusing cycle detection for **directed** vs **undirected** graphs
+- Dijkstra with negative edges → wrong answer (use Bellman-Ford instead)
+- Topological sort only works on **DAG** — always check for cycle first
+
+---
 
 Graph Data Structure is a non-linear data structure consisting of vertices and edges. A Graph is composed of a set of vertices( V ) and a set of edges( E ).
 

@@ -1,3 +1,55 @@
+# Bit Manipulation
+
+## Pattern Recognition Triggers
+- "Without using division / multiplication" → Bit shift
+- "Find the single non-duplicate in array" → XOR
+- "Count set bits / Hamming weight" → `n & (n-1)` trick
+- "Subsets of a set" → Bit masking (iterate 0 to 2^n)
+- "Check / set / flip the ith bit" → Bit masking
+
+## Essential Bit Tricks Cheat Sheet
+
+| Operation | Code | Explanation |
+|---|---|---|
+| Check if ith bit is set | `(n & (1 << i)) != 0` | Isolate bit i |
+| Set ith bit | `n \| (1 << i)` | Force bit i to 1 |
+| Clear ith bit | `n & ~(1 << i)` | Force bit i to 0 |
+| Toggle ith bit | `n ^ (1 << i)` | Flip bit i |
+| Check power of 2 | `n != 0 && (n & (n-1)) == 0` | Powers of 2 have exactly one set bit |
+| Remove lowest set bit | `n & (n-1)` | Clears rightmost 1 |
+| Get lowest set bit | `n & (-n)` | Isolates rightmost 1 |
+| Count set bits | Loop with `n & (n-1)` | Each iteration removes one set bit |
+| Multiply by 2 | `n << 1` | Left shift = multiply by 2 |
+| Divide by 2 | `n >> 1` | Right shift = floor divide by 2 |
+| XOR same number | `n ^ n == 0` | Any number XOR itself = 0 |
+| XOR with 0 | `n ^ 0 == n` | Any number XOR 0 = itself |
+
+## Key Interview Problems
+
+| Problem | Key Insight |
+|---|---|
+| Single Number | XOR all elements — pairs cancel, single survives |
+| Single Number II | Count bits mod 3; surviving bit belongs to single element |
+| Number of 1 Bits | Loop: `n = n & (n-1)`, count iterations |
+| Missing Number | XOR indices 0..n with all array elements — missing survives |
+| Reverse Bits | Extract LSB, shift result left, shift n right |
+| Sum of Two Integers | `a ^ b` = sum without carry; `(a & b) << 1` = carry; repeat |
+| Power of Two | `n > 0 && (n & (n-1)) == 0` |
+| Subsets | Iterate mask from 0 to `(1 << n) - 1` |
+| Maximum XOR of Two Numbers | Binary Trie, greedy bit-by-bit |
+
+## Complexity
+- All single bit operations: **O(1)**
+- Count set bits: **O(k)** where k = number of set bits
+- Generate all subsets: **O(2^n × n)**
+
+## Common Mistakes
+- Java `int` is 32 bits signed — `1 << 31` is negative (use `1L << 31` for long)
+- Right shift `>>` is arithmetic (sign-extended); `>>>` is logical (zero-filled) — use `>>>` when treating bits as unsigned
+- XOR is commutative and associative: order doesn't matter
+
+---
+
 Operations with bits are used in Data compression (data is compressed by converting it from one representation to another, to reduce the space), Exclusive-Or Encryption (an algorithm to encrypt the data for safety issues).
 
 We all know that 1 byte comprises of 8 bits and any integer or character can be represented using bits in computers, which we call its binary form(contains only 1 or 0) or in its base 2 form.

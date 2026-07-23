@@ -1,3 +1,87 @@
+# Dynamic Programming
+
+## Pattern Recognition Triggers
+Ask yourself: **"Can I make a decision at each step that affects future steps?"**
+- "Maximum / minimum / count ways to reach a target" → DP
+- "Is it possible to achieve X?" → DP (boolean)
+- Recursive solution has **overlapping subproblems** → memoize it
+- Problem asks for **optimal substructure** (best solution built from best sub-solutions)
+
+## The 5-Step DP Framework
+
+1. **Define the state** — what does `dp[i]` or `dp[i][j]` represent in English?
+2. **Write the recurrence** — how does `dp[i]` relate to smaller subproblems?
+3. **Identify base cases** — what is `dp[0]`, `dp[1]`?
+4. **Decide iteration order** — which indices must be computed before others?
+5. **Optimize space** — can you reduce the table to 1D or even O(1)?
+
+## Memoization vs Tabulation
+```
+Top-Down (Memoization):       Bottom-Up (Tabulation):
+- Start from the answer        - Start from base cases
+- Recurse + cache              - Fill table iteratively
+- Easier to write              - Faster (no recursion overhead)
+- May hit stack overflow       - Better for large inputs
+```
+
+## Common DP Patterns
+
+### 1D DP — "At each index, what's the best decision?"
+```java
+// House Robber template
+dp[0] = nums[0];
+dp[1] = Math.max(nums[0], nums[1]);
+for (int i = 2; i < n; i++)
+    dp[i] = Math.max(dp[i-1], dp[i-2] + nums[i]);
+```
+
+### 2D DP — Two sequences / grid
+```java
+// LCS template
+for (int i = 1; i <= m; i++)
+    for (int j = 1; j <= n; j++)
+        if (s1[i-1] == s2[j-1])  dp[i][j] = dp[i-1][j-1] + 1;
+        else                       dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);
+```
+
+### Knapsack — "Include or exclude each item"
+```java
+// 0/1 Knapsack template (iterate items outer, capacity inner)
+for (int i = 1; i <= n; i++)
+    for (int w = W; w >= weight[i]; w--)   // reverse to avoid reuse
+        dp[w] = Math.max(dp[w], dp[w - weight[i]] + value[i]);
+// Unbounded Knapsack: inner loop forward (allow reuse)
+```
+
+## Complexity Cheat Sheet
+| Problem Type | Time | Space | Optimized Space |
+|---|---|---|---|
+| 1D DP (house robber) | O(n) | O(n) | O(1) — 2 vars |
+| Grid DP (unique paths) | O(m×n) | O(m×n) | O(n) — 1 row |
+| LCS / Edit Distance | O(m×n) | O(m×n) | O(min(m,n)) |
+| 0/1 Knapsack | O(n×W) | O(n×W) | O(W) |
+| Subset Sum | O(n×S) | O(n×S) | O(S) |
+
+## Key Interview Problems by Category
+
+**Linear DP:** Fibonacci, Climbing Stairs, House Robber, Min Cost Climbing Stairs
+
+**Grid DP:** Unique Paths, Minimum Path Sum, Dungeon Game
+
+**Interval DP:** Palindrome Partitioning, Matrix Chain Multiplication, Burst Balloons
+
+**Knapsack variants:** 0/1 Knapsack, Subset Sum, Coin Change, Target Sum
+
+**String DP:** LCS, Edit Distance, Longest Palindromic Substring
+
+## Common Mistakes
+- Defining `dp[i]` incorrectly — if your recurrence doesn't make sense, redefine the state
+- Off-by-one: `dp[i]` represents first `i` elements vs element at index `i`
+- Knapsack: forgetting to reverse inner loop for 0/1 (forward = unbounded)
+- Not initializing base cases before filling the table
+
+---
+
 ## About
 The main idea of dynamic programming is to consider a significant problem and break it into smaller, individualized components. When it comes to implementation, optimal techniques rely on data storage and reuse to increase algorithm efficiency.  
   

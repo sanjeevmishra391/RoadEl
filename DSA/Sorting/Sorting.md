@@ -1,12 +1,83 @@
-## Selection Sorting
+# Sorting
 
-[Code](./SelectionSort.java)
+## Quick Reference — All Algorithms
+
+| Algorithm | Best | Average | Worst | Space | Stable | Notes |
+|---|---|---|---|---|---|---|
+| Bubble Sort | O(n) | O(n²) | O(n²) | O(1) | Yes | Only if optimized with early exit |
+| Selection Sort | O(n²) | O(n²) | O(n²) | O(1) | No | Minimum swaps |
+| Insertion Sort | O(n) | O(n²) | O(n²) | O(1) | Yes | Best for small/nearly sorted |
+| Merge Sort | O(n log n) | O(n log n) | O(n log n) | O(n) | Yes | Linked lists, external sort |
+| Quick Sort | O(n log n) | O(n log n) | O(n²) | O(log n) | No | Cache-friendly, fastest in practice |
+| Heap Sort | O(n log n) | O(n log n) | O(n log n) | O(1) | No | Guaranteed O(n log n) in-place |
+| Counting Sort | O(n+k) | O(n+k) | O(n+k) | O(k) | Yes | Only for integers in small range |
+| Radix Sort | O(nk) | O(nk) | O(nk) | O(n+k) | Yes | Integers or fixed-length strings |
+
+## Interview Decision Guide
+```
+Small array (< 20 elements)       → Insertion Sort
+Nearly sorted                     → Insertion Sort
+Need stable sort                  → Merge Sort
+Need guaranteed O(n log n)        → Merge Sort or Heap Sort
+Best average performance          → Quick Sort
+Sorting linked list               → Merge Sort (no random access needed)
+Integers in known range           → Counting Sort
+Memory is critical                → Heap Sort (in-place, O(1) space)
+```
+
+## Custom Comparator in Java (Interview Favorite)
+```java
+// Sort by string length, then alphabetically
+Arrays.sort(arr, (a, b) -> a.length() != b.length()
+    ? a.length() - b.length()
+    : a.compareTo(b));
+
+// Sort intervals by start time
+Arrays.sort(intervals, (a, b) -> a[0] - b[0]);
+
+// Largest number from array of integers
+Arrays.sort(nums, (a, b) -> (b + a).compareTo(a + b));
+```
+
+## Key Interview Problems
+
+| Problem | Approach | Key Insight |
+|---|---|---|
+| Sort Colors (Dutch Flag) | 3-way partition | Maintain low, mid, high pointers |
+| Kth Largest Element | Quick Select | Partial quick sort — O(n) avg |
+| Merge Intervals | Sort by start | Sort + check overlap with last interval |
+| Meeting Rooms | Sort by start | Check if consecutive intervals overlap |
+| Largest Number | Custom comparator | Compare `b+a` vs `a+b` as strings |
+
+## Common Mistakes
+- Forgetting Quick Sort worst case is O(n²) on sorted arrays → always use random pivot
+- Assuming stable sort when using Arrays.sort on primitives (it's not stable for primitives)
+- `Arrays.sort` on objects IS stable (uses TimSort); on primitives it's dual-pivot QuickSort
+
+## How Each Algorithm Works — With Code
+
+### Selection Sort [Code](./SelectionSort.java)
 
 Selection Sort is a comparison-based sorting algorithm. It sorts an array by repeatedly selecting the smallest (or largest) element from the unsorted portion and swapping it with the first unsorted element. This process continues until the entire array is sorted.
 
 1. First we find the smallest element and swap it with the first element. This way we get the smallest element at its correct position.
 2. Then we find the smallest among remaining elements (or second smallest) and swap it with the second element.
 3. We keep doing this until we get all elements moved to correct position.
+
+```java
+// Time: O(n²)  Space: O(1)  Stable: No
+void selectionSort(int[] arr) {
+    int n = arr.length;
+    for (int i = 0; i < n - 1; i++) {
+        int minIdx = i;
+        for (int j = i + 1; j < n; j++)
+            if (arr[j] < arr[minIdx]) minIdx = j;
+        int temp = arr[minIdx]; arr[minIdx] = arr[i]; arr[i] = temp;
+    }
+}
+```
+
+> Use when: **minimum number of swaps** is critical — it does at most n-1 swaps.
 
 ### Complexity Analysis of Selection Sort
 Time Complexity: O(n<sup>2</sup>) ,as there are two nested loops:
@@ -19,88 +90,204 @@ Therefore overall complexity = O(n) * O(n) = O(n*n) = O(n<sup>2</sup>)
 
 > Selection Sort is an in-place sorting algorithm and requires only O(1) additional space.
 
-## Bubble Sorting
+## Bubble Sort [Code](./BubbleSort.java)
 
-Bubble Sort is the simplest sorting algorithm that works by repeatedly swapping the adjacent elements if they are in the wrong order. This algorithm is not suitable for large data sets as its average and worst-case time complexity are quite high.
+Repeatedly swaps adjacent elements if they are in the wrong order. After each pass, the largest unsorted element bubbles to its correct position at the end.
 
-1. We sort the array using multiple passes. After the first pass, the maximum element goes to end (its correct position). Same way, after second pass, the second largest element goes to second last position and so on.
-2. In every pass, we process only those elements that have already not moved to correct position. After k passes, the largest k elements must have been moved to the last k positions.
-3. In a pass, we consider remaining elements and compare all adjacent and swap if larger element is before a smaller element. If we keep doing this, we get the largest (among the remaining elements) at its correct position.
+```java
+// Time: O(n²)  Space: O(1)  Stable: Yes
+void bubbleSort(int[] arr) {
+    int n = arr.length;
+    for (int i = 0; i < n - 1; i++) {
+        boolean swapped = false;                  // early exit optimisation
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                int temp = arr[j]; arr[j] = arr[j + 1]; arr[j + 1] = temp;
+                swapped = true;
+            }
+        }
+        if (!swapped) break;                      // already sorted — O(n) best case
+    }
+}
+```
 
-### Complexity Analysis of Bubble Sort:
-Time Complexity: O(n<sup>2</sup>)  
-Auxiliary Space: O(1)
+**Complexity:** Best O(n) · Average O(n²) · Worst O(n²) · Space O(1)
 
-> Bubble sort takes minimum time (Order of n) when elements are already sorted. Hence it is best to check if the array is already sorted or not beforehand, to avoid O(n<sup>2</sup>) time complexity.
+> Use when: almost never in practice — only for teaching. The early-exit trick makes it O(n) on sorted input.
 
-> In-place algorithm, no need of extra space
+---
 
-> The bubble sort algorithm is stable.
+## Insertion Sort [Code](./InsertionSort.java)
 
-## Insertion Sort
+Builds a sorted portion one element at a time. Takes the next element and inserts it into its correct position in the already-sorted left portion.
 
-Insertion sort is a simple sorting algorithm that works by iteratively inserting each element of an unsorted list into its correct position in a sorted portion of the list. It is like sorting playing cards in your hands. You split the cards into two groups: the sorted cards and the unsorted cards. Then, you pick a card from the unsorted group and put it in the right place in the sorted group.
+```java
+// Time: O(n²) worst, O(n) best  Space: O(1)  Stable: Yes
+void insertionSort(int[] arr) {
+    for (int i = 1; i < arr.length; i++) {
+        int key = arr[i];
+        int j = i - 1;
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];    // shift right to make room
+            j--;
+        }
+        arr[j + 1] = key;           // insert in correct position
+    }
+}
+```
 
-1. We start with second element of the array as first element in the array is assumed to be sorted.
-2. Compare second element with the first element and check if the second element is smaller then swap them.
-3. Move to the third element and compare it with the first two elements and put at its correct position
-4. Repeat until the entire array is sorted.
+**Complexity:** Best O(n) · Average O(n²) · Worst O(n²) · Space O(1)
 
-### Time Complexity of Insertion Sort
-Best case: O(n) , If the list is already sorted, where n is the number of elements in the list.  
-Average case: O(n<sup>2</sup> ) , If the list is randomly ordered  
-Worst case: O(n<sup>2</sup> ) , If the list is in reverse order
+> Use when: array is **small** (< 20 elements) or **nearly sorted**. Java's TimSort uses insertion sort for small subarrays.
 
-> Stable and In-place
+---
 
->  Insertion sort is used when number of elements is small. It can also be useful when the input array is almost sorted, and only a few elements are misplaced in a complete big array. 
+## Merge Sort [Code](./MergeSort.java)
 
-## Merge Sort
+Divide and conquer. Recursively splits array in half, sorts each half, then merges them back together. The merge step is where the real work happens.
 
-Merge sort is a sorting algorithm that follows the divide-and-conquer approach. It works by recursively dividing the input array into smaller subarrays and sorting those subarrays then merging them back together to obtain the sorted array.
+```java
+// Time: O(n log n) all cases  Space: O(n)  Stable: Yes
+void mergeSort(int[] arr, int left, int right) {
+    if (left >= right) return;
+    int mid = left + (right - left) / 2;
+    mergeSort(arr, left, mid);
+    mergeSort(arr, mid + 1, right);
+    merge(arr, left, mid, right);
+}
 
-### Complexity Analysis of Merge Sort:
-Time Complexity:
-Best Case: O(n log n), When the array is already sorted or nearly sorted.  
-Average Case: O(n log n), When the array is randomly ordered.  
-Worst Case: O(n log n), When the array is sorted in reverse order.  
+void merge(int[] arr, int left, int mid, int right) {
+    int[] temp = new int[right - left + 1];
+    int i = left, j = mid + 1, k = 0;
+    while (i <= mid && j <= right)
+        temp[k++] = (arr[i] <= arr[j]) ? arr[i++] : arr[j++];
+    while (i <= mid)  temp[k++] = arr[i++];
+    while (j <= right) temp[k++] = arr[j++];
+    for (int l = 0; l < temp.length; l++) arr[left + l] = temp[l];
+}
+```
 
-Auxiliary Space: O(n), Additional space is required for the temporary array used during merging.
+**Complexity:** Best O(n log n) · Average O(n log n) · Worst O(n log n) · Space O(n)
 
-> External Sorting, when dataset is too large to fit in memory
+> Use when: **stable sort required**, sorting **linked lists** (no random access needed), or **external sort** (data too large for memory).
 
-> It is a preferred algorithm for sorting Linked lists.
+---
 
-> Stable sorting but not in-place
+## Quick Sort [Code](./QuickSort.java)
 
-> QuickSort is more cache friendly because it works in-place.
+Divide and conquer. Picks a pivot, partitions the array so all elements < pivot are left, > pivot are right. Pivot is now in its final position. Recursively sort both halves.
 
-## Quick Sort
+```java
+// Time: O(n log n) avg, O(n²) worst  Space: O(log n)  Stable: No
+void quickSort(int[] arr, int low, int high) {
+    if (low < high) {
+        int pivotIdx = partition(arr, low, high);
+        quickSort(arr, low, pivotIdx - 1);
+        quickSort(arr, pivotIdx + 1, high);
+    }
+}
 
-QuickSort is a sorting algorithm based on the Divide and Conquer that picks an element as a pivot and partitions the given array around the picked pivot by placing the pivot in its correct position in the sorted array.
+int partition(int[] arr, int low, int high) {
+    // Randomise pivot to avoid O(n²) on sorted input
+    int randIdx = low + (int)(Math.random() * (high - low + 1));
+    swap(arr, randIdx, high);
 
-There are mainly three steps in the algorithm:
+    int pivot = arr[high];
+    int i = low - 1;                          // i = last position of "less than" zone
+    for (int j = low; j < high; j++) {
+        if (arr[j] <= pivot) {
+            i++;
+            swap(arr, i, j);
+        }
+    }
+    swap(arr, i + 1, high);                   // place pivot in correct position
+    return i + 1;
+}
+```
 
-1. Choose a Pivot: Select an element from the array as the pivot. The choice of pivot can vary (e.g., first element, last element, random element, or median).
-2. Partition the Array: Rearrange the array around the pivot. After partitioning, all elements smaller than the pivot will be on its left, and all elements greater than the pivot will be on its right. The pivot is then in its correct position, and we obtain the index of the pivot.
-3. Recursively Call: Recursively apply the same process to the two partitioned sub-arrays (left and right of the pivot).
-4. Base Case: The recursion stops when there is only one element left in the sub-array, as a single element is already sorted.
+**Complexity:** Best O(n log n) · Average O(n log n) · Worst O(n²) · Space O(log n)
 
-### Choice of Pivot
-There are many different choices for picking pivots.
+> Use when: **best average performance** in practice. Cache-friendly because it works in-place.
+> Always randomise the pivot — fixes the O(n²) worst case on sorted/reverse-sorted input.
 
-1. Always pick the first (or last) element as a pivot. The problem with this approach is it ends up in the worst case when array is already sorted.
-2. Pick a random element as a pivot. This is a preferred approach because it does not have a pattern for which the worst case happens.
-3. Pick the median element is pivot. This is an ideal approach in terms of time complexity as we can find median in linear time and the partition function will always divide the input array into two halves. But it takes more time on average as median finding has high constants
+---
 
-### Complexity Analysis of Quick Sort
-Time Complexity:
-- Best Case: (Ω(n log n)), Occurs when the pivot element divides the array into two equal halves.
-- Average Case (θ(n log n)), On average, the pivot divides the array into two parts, but not necessarily equal.
-- Worst Case: (O(n²)), Occurs when the smallest or largest element is always chosen as the pivot (e.g., sorted arrays).  
+## Heap Sort
 
-Auxiliary Space: O(n), due to recursive call stack
+Uses a max-heap. Build heap from array, then repeatedly extract the max and place it at the end.
 
-> Cache Friendly  
+```java
+// Time: O(n log n) all cases  Space: O(1)  Stable: No
+void heapSort(int[] arr) {
+    int n = arr.length;
+    // Build max heap (heapify from last non-leaf node down to root)
+    for (int i = n / 2 - 1; i >= 0; i--)
+        heapify(arr, n, i);
+    // Extract max one by one — place at end of array
+    for (int i = n - 1; i > 0; i--) {
+        swap(arr, 0, i);          // move current max to end
+        heapify(arr, i, 0);      // restore heap property on reduced heap
+    }
+}
 
-> It is not a good choice for small data sets.
+void heapify(int[] arr, int n, int i) {
+    int largest = i, left = 2 * i + 1, right = 2 * i + 2;
+    if (left  < n && arr[left]  > arr[largest]) largest = left;
+    if (right < n && arr[right] > arr[largest]) largest = right;
+    if (largest != i) {
+        swap(arr, i, largest);
+        heapify(arr, n, largest);
+    }
+}
+```
+
+**Complexity:** Best O(n log n) · Average O(n log n) · Worst O(n log n) · Space O(1)
+
+> Use when: **guaranteed O(n log n) with O(1) space** is required. Not cache-friendly — use Merge Sort if stability matters.
+
+---
+
+## Counting Sort
+
+Not comparison-based. Works by counting occurrences of each value. Only works on non-negative integers within a known range.
+
+```java
+// Time: O(n + k)  Space: O(k)  Stable: Yes  (k = range of values)
+void countingSort(int[] arr, int maxVal) {
+    int[] count = new int[maxVal + 1];
+    for (int n : arr) count[n]++;                 // count each value
+    for (int i = 1; i <= maxVal; i++) count[i] += count[i - 1];  // prefix sum → positions
+    int[] output = new int[arr.length];
+    for (int i = arr.length - 1; i >= 0; i--)     // fill from right → stable
+        output[--count[arr[i]]] = arr[i];
+    System.arraycopy(output, 0, arr, 0, arr.length);
+}
+```
+
+**Complexity:** O(n + k) time · O(k) space
+
+> Use when: integers in a small known range (e.g., ages 0–120, scores 0–100). Linear time but only for integers.
+
+---
+
+## Quick Select — Kth Largest/Smallest in O(n) Average
+
+Not a full sort — finds the kth element without sorting the entire array. Uses the partition step from QuickSort.
+
+```java
+// Time: O(n) average, O(n²) worst  Space: O(log n)
+// Find kth LARGEST element (k=1 means largest)
+public int findKthLargest(int[] nums, int k) {
+    return quickSelect(nums, 0, nums.length - 1, nums.length - k);
+    // kth largest = (n-k)th smallest → target index in sorted order
+}
+
+int quickSelect(int[] arr, int low, int high, int k) {
+    int pivotIdx = partition(arr, low, high);   // same partition as QuickSort
+    if (pivotIdx == k)      return arr[pivotIdx];
+    else if (pivotIdx < k)  return quickSelect(arr, pivotIdx + 1, high, k);
+    else                    return quickSelect(arr, low, pivotIdx - 1, k);
+}
+```
+
+> **Interview key point:** QuickSelect is O(n) average — faster than sorting (O(n log n)) when you only need the kth element. Randomise pivot to avoid O(n²) worst case.
