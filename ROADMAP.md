@@ -1,5 +1,5 @@
 # Interview Preparation Roadmap
-**Timeline:** 4 Weeks
+**Timeline:** 4 Weeks | **Target:** Senior / Staff — FAANG / MAANG
 
 ---
 
@@ -21,7 +21,7 @@
 | Weekly deep-dive topic | 1.5 hrs | YES |
 | Flashcard review (prev topics) | 30 min | Recommended |
 
-**Saturday** → Timed mock interview (no notes, treat as real)  
+**Saturday** → Timed mock interview (no notes, treat as real)
 **Sunday** → Repo cleanup + identify weakest topic for next week
 
 ---
@@ -30,12 +30,12 @@
 > Goal: Warm up DSA rhythm. Fill Java gaps interviewers actually probe.
 
 ### DSA Focus This Week
-Arrays · Strings · Two Pointers · Sliding Window · Binary Search  
+Arrays · Strings · Two Pointers · Sliding Window · Binary Search
 Platform: [NeetCode.io](https://neetcode.io/practice) — use the structured roadmap
 
 ### Daily Java Deep-Dive
 
-| Day | Topic | Repo File |
+| Day | Topic | File |
 |---|---|---|
 | Mon | Java Memory Model: heap/stack, GC, strong/weak/soft references | `Java/ModernJava/MemoryModel.md` |
 | Tue | Collections internals: HashMap, LinkedHashMap, TreeMap, ConcurrentHashMap | `Java/ModernJava/Collections.md` |
@@ -43,80 +43,76 @@ Platform: [NeetCode.io](https://neetcode.io/practice) — use the structured roa
 | Thu | Java 11-17: records, sealed classes, var, pattern matching for instanceof | `Java/ModernJava/Java11to17.md` |
 | Fri | Stream API: advanced collectors, flatMap, groupingBy, reduce | `Java/ModernJava/Streams.md` |
 | Sat | Mock: 2 DSA problems timed (45 min each) + Java quiz from your notes | — |
-| Sun | Repo: Write `Java/ModernJava/` files. Add Big-O comments to DSA files | — |
+| Sun | Review weakest topic. Add Big-O comments to DSA files you solved this week | — |
 
 ### Repo Deliverables This Week
-- [ ] `Java/ModernJava/` — 5 note files (one per day above)
-- [ ] `DSA/BinarySearch/` — solve the 9 problems listed in `DSA/DSA.md`
-- [ ] `DSA/SlidingWindow/` — 5 problems (min window substring, max sliding window, fruits in baskets)
-- [ ] Add `// Time: O(...) Space: O(...)` comment to every existing DSA `.java` file
+- [ ] Read all `Java/ModernJava/` files (5 files)
+- [ ] Solve 9 problems from `DSA/BinarySearch/BinarySearch.md`
+- [ ] Solve problems in `DSA/SlidingWindow/SlidingWindow.md`
+- [ ] Solve problems in `DSA/TwoPointer/TwoPointers.md`
+- [ ] Add `// Time: O(...) Space: O(...)` to every DSA file you touch
 
 ---
 
-## Week 2 — System Design + DSA Medium
-> Goal: Build HLD from zero. Cover 5 missing design patterns. Push DSA to medium.
+## Week 2 — System Design Foundations + DSA Medium
+> Goal: Build HLD intuition from scratch. Understand the building blocks before the systems.
 
 ### DSA Focus This Week
 Trees · Graphs · Heaps · Stack/Queue patterns
 
 ### Daily System Design Deep-Dive
 
-| Day | Topic | Repo File |
+| Day | Topic | File |
 |---|---|---|
-| Mon | HLD Foundations: load balancing (L4/L7), caching (Redis, write-through/write-back), CDN | `SystemDesign/HLD/Foundations.md` |
-| Tue | Databases at scale: sharding, replication, consistent hashing, read replicas | `SystemDesign/HLD/Databases.md` |
-| Wed | Async + Deployment: Kafka/RabbitMQ, pub-sub, Docker/K8s, CI/CD, microservices | `SystemDesign/HLD/AsyncSystems.md` |
-| Thu | HLD Walkthrough: Design URL Shortener (end-to-end) | `SystemDesign/HLD/URLShortener.md` |
-| Fri | HLD Walkthroughs: Rate Limiter + Notification System | `SystemDesign/HLD/RateLimiter.md` |
+| Mon | Networking + Caching: DNS, HTTP/2, CDN, Redis, write strategies, thundering herd | `SystemDesign/Foundations/01_Networking.md` + `02_Caching.md` |
+| Tue | Databases at scale: SQL vs NoSQL, sharding, replication, CAP, PACELC | `SystemDesign/Foundations/03_Databases.md` |
+| Wed | Messaging + Load Balancing: Kafka internals, delivery guarantees, LB algorithms | `SystemDesign/Foundations/04_Messaging.md` + `05_LoadBalancing.md` |
+| Thu | Core Patterns: Consistent Hashing, Rate Limiting, Fan-Out | `SystemDesign/CorePatterns/01_ConsistentHashing.md` + `02_RateLimiting.md` + `03_FanOut.md` |
+| Fri | Core Patterns: Distributed Locking, Idempotency, API Gateway + Circuit Breaker | `SystemDesign/CorePatterns/04_DistributedLocking.md` + `05_Idempotency.md` + `06_APIGateway.md` |
 | Sat | Mock: 1 medium DSA (45 min) + 1 system design simulation (45 min) | — |
-| Sun | Repo: Add `SystemDesign/HLD/`, add 5 design patterns with code | — |
+| Sun | Design URL Shortener and Rate Limiter end-to-end out loud | `SystemDesign/Systems/01_URLShortener.md` + `02_RateLimiter.md` |
 
 ### Repo Deliverables This Week
-- [ ] `SystemDesign/HLD/Foundations.md` — caching, load balancing, CDN notes
-- [ ] `SystemDesign/HLD/Databases.md` — sharding, replication, consistent hashing
-- [ ] `SystemDesign/HLD/AsyncSystems.md` — Kafka vs RabbitMQ, Docker/K8s, CI/CD
-- [ ] `SystemDesign/HLD/URLShortener.md` — full design walkthrough
-- [ ] `SystemDesign/HLD/RateLimiter.md` — token bucket, leaky bucket algorithms
-- [ ] `SystemDesign/HLD/NotificationSystem.md` — fan-out design
-- [ ] `SystemDesign/DesignPatterns/Creational/Singleton.java` — thread-safe, double-checked locking
-- [ ] `SystemDesign/DesignPatterns/Creational/Builder.java`
-- [ ] `SystemDesign/DesignPatterns/Behavioural/Observer.java`
-- [ ] `SystemDesign/DesignPatterns/Behavioural/Strategy.java`
-- [ ] `SystemDesign/DesignPatterns/Behavioural/Command.java`
-- [ ] `DSA/Heap/` — Top K elements, Merge K sorted lists, K closest points
+- [ ] Read all 6 `SystemDesign/Foundations/` files
+- [ ] Read all 6 `SystemDesign/CorePatterns/` files
+- [ ] Walk through `Systems/01_URLShortener.md` and `02_RateLimiter.md`
+- [ ] Solve `DSA/Heap/Heap.md` problems (Top K, Merge K, Median from Stream)
+- [ ] Solve `DSA/Tree/Tree.md` problems
+- [ ] Solve `DSA/Graph/Graph.md` problems
 
 ---
 
-## Week 3 — DBMS + Frontend + DSA Hard
-> Goal: SQL fluency beyond basics. JS/React core for full-stack roles. Hard DSA.
+## Week 3 — LLD + System Walkthroughs + DSA Hard
+> Goal: LLD fluency. Walk through 4 real systems. Push DSA to hard.
 
 ### DSA Focus This Week
-Dynamic Programming (hard) · Backtracking · Dijkstra · Topological Sort · Union-Find
+Dynamic Programming · Backtracking · Intervals · LinkedList patterns
 
 ### Daily Deep-Dive
 
-| Day | Topic | Repo File |
+| Day | Topic | File |
 |---|---|---|
-| Mon | SQL Window Functions: ROW_NUMBER, RANK, DENSE_RANK, LAG, LEAD | `DBMS/Queries/WindowFunctions.md` |
-| Tue | Query Optimization + Cloud: EXPLAIN plan, indexes, CTEs + AWS/GCP services | `DBMS/Queries/Optimization.md` + `SystemDesign/HLD/Cloud.md` |
-| Wed | 10 SQL Practice Problems: self-joins, GROUP BY/HAVING, subqueries + Observability | `DBMS/Queries/Problems.md` + `SystemDesign/HLD/Observability.md` |
-| Thu | JavaScript Core: event loop, closures, promises, async/await, `this` context | `Frontend/JavaScript.md` |
-| Fri | JavaScript Advanced + React: prototypal inheritance, hooks, reconciliation, state mgmt | `Frontend/React.md` |
-| Sat | Mock: 1 hard DSA (45 min) + SQL query round (30 min) | — |
-| Sun | Repo: Finalize all Week 3 files | — |
+| Mon | LLD foundations: SOLID, pattern trigger table, 4-step approach | `SystemDesign/LLD/SOLID.md` + `SystemDesign/LLD/README.md` |
+| Tue | Design Patterns: Creational (Singleton, Builder, Factory, AbstractFactory) | `SystemDesign/LLD/Patterns/Creational/` |
+| Wed | Design Patterns: Structural (Decorator, Adapter, Proxy, Facade) + Behavioural (Observer, Strategy, Command, State, Template) | `SystemDesign/LLD/Patterns/Structural/` + `Behavioural/` |
+| Thu | LLD Case Studies: ParkingLot + VendingMachine + Elevator | `SystemDesign/LLD/CaseStudies/ParkingLot.md` + `VendingMachine.md` + `Elevator.md` |
+| Fri | LLD Case Studies: BookMyShow + ATM + Concurrency Patterns | `SystemDesign/LLD/CaseStudies/BookMyShow.md` + `ATM.md` + `ConcurrencyPatterns.md` |
+| Sat | Mock: 1 hard DSA (45 min) + 1 LLD round (45 min) | — |
+| Sun | HLD systems: walk through TwitterFeed + NotificationSystem out loud | `SystemDesign/Systems/03_NotificationSystem.md` + `04_TwitterFeed.md` |
 
 ### Repo Deliverables This Week
-- [ ] `Frontend/JavaScript.md` — event loop diagram, closure examples, async/await, this
-- [ ] `Frontend/React.md` — hooks cheatsheet, reconciliation, controlled vs uncontrolled, state tradeoffs
-- [ ] `DBMS/Queries/WindowFunctions.md` — ROW_NUMBER, RANK, LAG/LEAD with examples
-- [ ] `DBMS/Queries/Optimization.md` — EXPLAIN plan, index tips, CTEs
-- [ ] `DBMS/Queries/Problems.md` — 10 SQL problems with full solutions
-- [ ] `SystemDesign/HLD/Cloud.md` — S3, EC2, Lambda, RDS vs DynamoDB, API Gateway
-- [ ] `SystemDesign/HLD/Observability.md` — structured logging, distributed tracing, Grafana, ELK
+- [ ] Read `SystemDesign/LLD/SOLID.md` + `LLD/README.md`
+- [ ] Read all 13 design pattern docs in `SystemDesign/LLD/Patterns/`
+- [ ] Read all 5 LLD case studies
+- [ ] Walk through 4 HLD system walkthroughs
+- [ ] Solve `DSA/Dynamic/DP.md` problems
+- [ ] Solve `DSA/Backtracking/Backtracking.md` problems
+- [ ] Solve `DSA/Intervals/Intervals.md` problems
+- [ ] Solve `DSA/LinkedList/LinkedList.md` problems
 
 ---
 
-## Week 4 — Behavioral + AI/LLM + Mock Rounds
+## Week 4 — Behavioral + HLD Polish + Final Mock Rounds
 > Goal: Interview-ready end-to-end. No new foundational topics. Consolidate + differentiate.
 
 ### DSA Focus This Week
@@ -124,22 +120,21 @@ Mixed simulation — pick randomly across all patterns, simulate real interview 
 
 ### Daily Plan
 
-| Day | Focus | Repo File |
+| Day | Focus | File |
 |---|---|---|
-| Mon | Write STAR answers for 5 questions already in `Resources.txt` | `Behavioural/STAR.md` |
-| Tue | Add 5 more STAR answers: leadership, failure, conflict with manager, best project, tech debt | `Behavioural/STAR.md` |
-| Wed | AI/LLM: prompt engineering, RAG architecture, vector DBs, fine-tuning vs RAG | `SystemDesign/HLD/AI_LLM.md` |
-| Thu | Full mock day: DSA (1 hr) + System Design (45 min) + Behavioral (30 min) back-to-back | — |
-| Fri | Gap fill: revisit 3 weakest topics. Review all HLD designs out loud | — |
+| Mon | DBMS deep read + SQL window functions | `DBMS/DBMS.md` |
+| Tue | Cloud services + Security in system design | `SystemDesign/HLD/Cloud.md` + `SystemDesign/HLD/Security.md` |
+| Wed | Observability + remaining HLD systems (DistributedCache, Autocomplete, Uber, WebCrawler) | `SystemDesign/HLD/Observability.md` + `SystemDesign/Systems/05-08` |
+| Thu | Write STAR answers for 10 behavioral questions | `Behavioural/STAR.md` |
+| Fri | Full mock day: DSA (1 hr) + System Design (45 min) + Behavioral (30 min) back-to-back | — |
 | Sat | Full mock interview — completely timed, no notes, treat as the real thing | — |
-| Sun | Final repo polish: READMEs, commit everything, review once through | — |
+| Sun | Gap fill: revisit 3 weakest topics. Review all HLD designs out loud | — |
 
 ### Repo Deliverables This Week
-- [ ] `Behavioural/STAR.md` — 10 full STAR answers from your real work
-- [ ] `SystemDesign/HLD/AI_LLM.md` — RAG, prompt engineering, vector DBs, LLM API integration
-- [ ] `SystemDesign/Examples/ParkingLot/README.md` — patterns used, class diagram, edge cases
-- [ ] `SystemDesign/Examples/VendingMachine/README.md` — patterns used, class diagram, edge cases
-- [ ] Final pass: every folder has a README or index
+- [ ] Read `SystemDesign/HLD/Cloud.md` + `Security.md` + `Observability.md`
+- [ ] Walk through `Systems/05_DistributedCache.md` through `08_WebCrawler.md`
+- [ ] Write 10 real STAR answers in `Behavioural/STAR.md`
+- [ ] Final pass: review pattern trigger table + numbers cheat sheet in `SystemDesign/README.md`
 
 ---
 
@@ -149,7 +144,7 @@ Mixed simulation — pick randomly across all patterns, simulate real interview 
 |---|---|---|---|---|
 | 1 | Easy / Easy-Medium | 2 | ~14 | NeetCode — Arrays, Strings, Binary Search |
 | 2 | Medium | 2 | ~28 | NeetCode — Trees, Graphs, Heap |
-| 3 | Medium / Hard | 2 | ~42 | NeetCode — DP, Backtracking, Graphs |
+| 3 | Medium / Hard | 2 | ~42 | NeetCode — DP, Backtracking, Intervals |
 | 4 | Mixed | 2 | ~56 | Random from all patterns |
 
 ---
@@ -166,10 +161,12 @@ Mixed simulation — pick randomly across all patterns, simulate real interview 
 | All combinations / permutations | Backtracking |
 | Optimal decision at each step | Dynamic Programming |
 | Next greater / smaller element | Monotonic Stack |
-| Kth largest / Top K | Heap |
+| Kth largest / Top K / Median | Heap |
 | Dependency ordering | Topological Sort |
 | Prefix search / autocomplete | Trie |
 | Connected components / cycle | Union-Find |
+| Overlapping intervals | Interval sweep (sort by start) |
+| Reverse / cycle in list | Fast/Slow pointer |
 
 ---
 
@@ -177,74 +174,127 @@ Mixed simulation — pick randomly across all patterns, simulate real interview 
 
 | Topic | Weight at Interview | Status | Week |
 |---|---|---|---|
-| DSA | Very High | Good — push harder | All |
-| System Design HLD | Very High | Missing — build from scratch | 2 |
-| Java (modern) | High | Java 8 only — extend to 17 | 1 |
-| Design Patterns (LLD) | High | 2 of 23 — add 5 key ones | 2 |
-| Behavioral | High (filter) | Questions only — write STAR | 4 |
-| DBMS (SQL practice) | Medium-High | Theory solid — add queries | 3 |
-| Frontend / React | Medium-High | Zero — build essentials | 3 |
-| Deployment / DevOps | Medium | Zero — conceptual fluency | 2 |
-| AI / LLM | Medium (differentiator) | Zero — conceptual fluency | 4 |
-| Cloud (AWS/GCP) | Medium | Zero — conceptual fluency | 3 |
-| Observability | Low-Medium | Zero — conceptual fluency | 3 |
+| DSA | Very High | Covered — push harder | All |
+| System Design HLD | Very High | Covered — Foundations + Patterns + 8 systems | 2-4 |
+| LLD + Design Patterns | High | Covered — 13 patterns + 5 case studies | 3 |
+| Java (modern) | High | Covered — Java 8-17 | 1 |
+| Behavioral | High (filter) | Covered — STAR guide + 12 questions | 4 |
+| DBMS | Medium-High | Theory solid | 4 |
+| Cloud (AWS) | Medium-High | Covered — Cloud.md | 4 |
+| Security | Medium-High | Covered — Security.md | 4 |
+| Observability | Medium | Covered — Observability.md | 4 |
+| Concurrency Patterns (LLD) | Medium | Covered — ConcurrencyPatterns.md | 3 |
 
 ---
 
 ## STAR Answer Template
 
-Use this structure for every behavioral answer. Pull from **real work only**.
-
 ```
-Situation: What was the context? (1-2 sentences, set the scene)
+Situation: What was the context? (1-2 sentences)
 Task:       What was YOUR specific responsibility?
-Action:     What did YOU do, step by step? (most important — be specific)
-Result:     What was the measurable outcome? (numbers, impact, what changed)
+Action:     What did YOU do, step by step? (most important — be specific, 5-7 sentences)
+Result:     Measurable outcome — numbers, impact, what changed
 ```
+
+Full guide with 12 questions, Amazon LPs, and calibration signals → [`Behavioural/STAR.md`](./Behavioural/STAR.md)
 
 ---
 
-## Repo Structure (Target — End of Week 4)
+## HLD Quick-Reference Numbers
+
+```
+Memory access:           ~100 ns
+SSD random read:         ~100 µs
+Network same region:     ~1 ms
+Network cross-region:    ~100 ms
+
+Redis:                   ~100K ops/sec per instance
+Kafka:                   ~1M msgs/sec per broker
+MySQL single primary:    ~1K writes/sec
+PostgreSQL:              ~5K writes/sec
+S3:                      ~3,500 PUT/sec, ~5,500 GET/sec per prefix
+DynamoDB on-demand:      unlimited (you pay per request)
+```
+
+Full cheat sheet → [`SystemDesign/README.md`](./SystemDesign/README.md)
+
+---
+
+## Quick Decision Guide
+
+| Question | Go to |
+|---|---|
+| "I don't know which DSA pattern to use" | [DSA/HowToPrepareDSA.md](./DSA/HowToPrepareDSA.md) |
+| "I know the pattern but not the template" | `DSA/Algorithms/<pattern>.md` or the topic `.md` |
+| "I need a solved problem" | `DSA/<Topic>/<Topic>.md` |
+| "I need to prep for HLD" | [SystemDesign/README.md](./SystemDesign/README.md) → Foundations → CorePatterns → Systems |
+| "I need to prep for LLD" | [SystemDesign/LLD/README.md](./SystemDesign/LLD/README.md) → SOLID → Patterns → Case Studies |
+| "I'm doing an Amazon loop" | [Behavioural/STAR.md](./Behavioural/STAR.md) — read the LP section |
+| "I need Java internals" | [Java/ModernJava/README.md](./Java/ModernJava/README.md) |
+
+---
+
+## Complete File Map
 
 ```
 RoadEl/
-├── ROADMAP.md                          ← You are here
+│
+├── ROADMAP.md                 ← You are here
+├── Resources.txt              ← External links
+│
 ├── DSA/
-│   ├── HowToPrepareDSA.md              ← Pattern guide + study process (merged)
-│   ├── BinarySearch/                   ← Week 1
-│   ├── SlidingWindow/                  ← Week 1 (problems)
-│   ├── Heap/                           ← Week 2
-│   └── [all existing folders + Big-O comments]
-├── SystemDesign/
-│   ├── HLD/
-│   │   ├── Foundations.md              ← Week 2
-│   │   ├── Databases.md                ← Week 2
-│   │   ├── AsyncSystems.md             ← Week 2
-│   │   ├── URLShortener.md             ← Week 2
-│   │   ├── RateLimiter.md              ← Week 2
-│   │   ├── NotificationSystem.md       ← Week 2
-│   │   ├── Cloud.md                    ← Week 3
-│   │   ├── Observability.md            ← Week 3
-│   │   └── AI_LLM.md                   ← Week 4
-│   ├── DesignPatterns/
-│   │   ├── Creational/Singleton.java   ← Week 2
-│   │   ├── Creational/Builder.java     ← Week 2
-│   │   └── Behavioural/               ← Week 2 (Observer, Strategy, Command)
-│   └── Examples/
-│       ├── ParkingLot/README.md        ← Week 4
-│       └── VendingMachine/README.md    ← Week 4
+│   ├── HowToPrepareDSA.md     ← Pattern trigger table + study process
+│   ├── Arrays/Arrays.md
+│   ├── Algorithms/            ← TwoPointers, SlidingWindow, Kadane (theory)
+│   ├── TwoPointer/            ← 10 problems with solutions
+│   ├── SlidingWindow/         ← 7 problems with solutions
+│   ├── BinarySearch/          ← 3 templates + 9 problems
+│   ├── Heap/Heap.md           ← Top K, Merge K, Median from Stream
+│   ├── Tree/Tree.md           ← DFS/BFS templates + 10 problems
+│   ├── Graph/Graph.md         ← All graph algorithms
+│   ├── Stack/Stack.md         ← Monotonic stack
+│   ├── Sorting/Sorting.md     ← 8 algorithms compared
+│   ├── Dynamic/DP.md          ← 5-step framework + problems
+│   ├── Backtracking/          ← Template + 8 problems
+│   ├── Intervals/             ← Sweep + 7 problems
+│   ├── LinkedList/            ← Fast/slow pointer + LRU
+│   ├── Trie/Trie.md
+│   └── String/String.md
+│
 ├── Java/
-│   └── ModernJava/                     ← Week 1 (Java 11-17)
-├── Frontend/                           ← Week 3
-│   ├── JavaScript.md
-│   └── React.md
+│   ├── Java.md
+│   └── ModernJava/            ← MemoryModel, Collections, Concurrency,
+│                                 Streams, Java11to17
+│
+├── SystemDesign/
+│   ├── README.md              ← Master index + cheat sheets
+│   ├── Foundations/           ← Networking, Caching, Databases,
+│   │                             Messaging, LoadBalancing, Storage
+│   ├── CorePatterns/          ← ConsistentHashing, RateLimiting,
+│   │                             FanOut, DistributedLocking, Idempotency,
+│   │                             APIGateway
+│   ├── Systems/               ← 8 HLD walkthroughs: URLShortener,
+│   │                             RateLimiter, Notifications, TwitterFeed,
+│   │                             DistributedCache, SearchAutocomplete,
+│   │                             Uber, WebCrawler
+│   ├── HLD/                   ← Cloud, Security, Observability
+│   └── LLD/
+│       ├── README.md          ← 4-step approach + trigger table
+│       ├── SOLID.md           ← All 5 principles + DRY/KISS/YAGNI
+│       ├── ConcurrencyPatterns.md
+│       ├── Patterns/
+│       │   ├── README.md      ← 12 essential vs 10 to-know
+│       │   ├── Creational/    ← Singleton, Builder, Factory, AbstractFactory
+│       │   ├── Structural/    ← Decorator, Adapter, Proxy, Facade
+│       │   └── Behavioural/   ← Observer, Strategy, Command, State, Template
+│       └── CaseStudies/       ← ParkingLot, VendingMachine, BookMyShow,
+│                                 ATM, Elevator
+│
 ├── DBMS/
-│   └── Queries/                        ← Week 3
-│       ├── WindowFunctions.md
-│       ├── Optimization.md
-│       └── Problems.md
-└── Behavioural/                        ← Week 4
-    └── STAR.md
+│   └── DBMS.md                ← Keys, joins, ACID, CAP, indexing
+│
+└── Behavioural/
+    └── STAR.md                ← 12 questions, Amazon LPs, story bank
 ```
 
 ---
@@ -254,8 +304,7 @@ RoadEl/
 | Topic | Link |
 |---|---|
 | DSA Problems | https://neetcode.io/practice |
-| DSA Video Playlist | Already in `Resources.txt` |
 | System Design | https://github.com/ashishps1/awesome-system-design-resources |
-| System Design Course | https://bytebytego.com/courses/system-design-interview |
 | Low Level Design | https://github.com/ashishps1/awesome-low-level-design |
-| Tech Engineering Blogs | See `Resources.txt` for 33 blogs |
+| System Design Book | https://bytebytego.com/courses/system-design-interview |
+| Engineering Blogs | See `Resources.txt` |
