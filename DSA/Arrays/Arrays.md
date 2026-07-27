@@ -44,12 +44,13 @@ sum(l, r) = prefix[r] - prefix[l-1]
 ```
 ```java
 // Build prefix sum
-int[] prefix = new int[n + 1];  // prefix[0] = 0 (sentinel)
-for (int i = 0; i < n; i++)
-    prefix[i + 1] = prefix[i] + arr[i];
+int[] prefix = new int[n]; 
+prefix[0] = arr[0];
+for (int i = 1; i < n; i++)
+    prefix[i] = prefix[i-1] + arr[i];
 
 // Query sum from index l to r (0-indexed, inclusive)
-int rangeSum = prefix[r + 1] - prefix[l];
+int rangeSum = prefix[r] - prefix[l-1];
 ```
 
 **Key problems using prefix sum:**

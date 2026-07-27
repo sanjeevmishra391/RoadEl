@@ -1,5 +1,7 @@
 # Java Concurrency — Modern Approach
 
+[Resource](https://solutionsarchitecture.medium.com/java-concurrency-tutorial-from-basics-to-advanced-89f3f6d1a9b9)
+
 ## The Problem: Why Concurrency is Hard
 ```
 Thread A reads x = 0
