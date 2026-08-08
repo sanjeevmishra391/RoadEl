@@ -71,3 +71,28 @@ interface M {
   class A { }  
 }
 ```
+
+## Common Interview Questions
+
+**Q: What is the difference between a static nested class and an inner class?**
+A: An inner class (non-static) has an implicit reference to the enclosing outer class instance — it can access all outer instance members. A static nested class has no such reference — it can only access static members of the outer class. You need an outer instance to create an inner class (`outer.new Inner()`), but not for a static nested class (`new Outer.Nested()`).
+
+**Q: What is an anonymous inner class and when would you use it?**
+A: A one-time-use class defined and instantiated in a single expression, with no explicit name. Used to implement an interface or extend a class inline. Before Java 8, common for callbacks and event handlers. After Java 8, lambdas replaced most anonymous class uses (for functional interfaces), but anonymous classes are still needed when implementing multi-method interfaces or extending a class.
+
+```java
+// Pre-Java 8 — anonymous class
+Runnable r = new Runnable() {
+    @Override
+    public void run() { System.out.println("running"); }
+};
+
+// Java 8+ — lambda (only works for single-method interfaces)
+Runnable r = () -> System.out.println("running");
+```
+
+**Q: Why can a local inner class only access effectively final local variables?**
+A: The local inner class object may outlive the method invocation (e.g., it's passed to another thread). The local variable is on the stack and would be gone by then. Java copies the variable's value into the inner class instance — this only works safely if the value never changes (effectively final). If it changed, the inner class would see a stale copy.
+
+**Q: What is a memory leak risk with inner classes?**
+A: Non-static inner classes hold an implicit reference to the outer class instance. If an inner class object is held longer than expected (e.g., registered as a listener and never deregistered), it prevents the outer instance from being garbage collected. Fix: use a static nested class if you don't need access to outer instance state.

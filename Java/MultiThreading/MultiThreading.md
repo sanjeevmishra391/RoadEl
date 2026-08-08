@@ -374,56 +374,13 @@ The JVM shuts down when:
 ### Factory method
 The method that returns the instance of a class is known as factory method.
 
-## Java Garbage Collection
-[Example ↗︎](./GarbageCollection.java)  
-In java, garbage means unreferenced objects.
-
-Garbage Collection is process of reclaiming the runtime unused memory automatically. In other words, it is a way to destroy the unused objects.
-
-To do so, we were using free() function in C language and delete() in C++. But, in java it is performed automatically. So, java provides better memory management.
-
-### How can an object be unreferenced?
-There are many ways:
-
-- By nulling the reference
-    ```java
-    Employee e=new Employee();  
-    e=null;  
-    ```
-- By assigning a reference to another
-    ```java
-    Employee e1=new Employee();  
-    Employee e2=new Employee();  
-    e1=e2;//now the first object referred by e1 is available for garbage collection  
-    ```
-- By anonymous object etc.
-    ```java
-    new Employee();  
-    ```
-
-### finalize() method
-The finalize() method is invoked each time before the object is garbage collected. This method can be used to perform cleanup processing. This method is defined in Object class as:
-
-```java
-protected void finalize(){}  
-```
-
-> Note: The Garbage collector of JVM collects only those objects that are created by new keyword. So if you have created any object without new, you can use finalize method to perform cleanup processing (destroying remaining objects).
-
-### gc() method
-The gc() method is used to invoke the garbage collector to perform cleanup processing. The gc() is found in System and Runtime classes.
-
-```java
-public static void gc(){}  
-```
-
-> Garbage collection is performed by a daemon thread called Garbage Collector(GC). This thread calls the finalize() method before object is garbage collected.
-
 ## Java Runtime class
 [Example ↗︎](./RuntimeDemo.java)  
 Java Runtime class is used to interact with *java runtime environment*. Java Runtime class provides methods to execute a process, invoke GC, get total and free memory etc. There is only one instance of java.lang.Runtime class is available for one java application.
 
 The **Runtime.getRuntime()** method returns the singleton instance of Runtime class.
+
+> GC is covered in depth in [ModernJava/MemoryModel.md](../ModernJava/MemoryModel.md).
 
 ## !Additional Important
 
@@ -455,6 +412,88 @@ When a task is submitted, the Future object allows us to retrieve the result onc
 ### Synchronizing Threads
 [Example ↗︎](./Synchronization.java)  
 When multiple threads access shared resources (like variables or files), you may need to synchronize access to prevent race conditions.
+
+## How to Stop a Thread Cleanly
+
+`Thread.stop()` is deprecated — it forcibly kills the thread leaving shared state inconsistent. The correct pattern is **cooperative interruption**.
+
+```java
+// Thread checks the interrupted flag and exits gracefully
+public class Worker implements Runnable {
+    @Override
+    public void run() {
+        while (!Thread.currentThread().isInterrupted()) {
+            try {
+                doWork();
+                Thread.sleep(100);          // sleep throws InterruptedException if interrupted
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt(); // restore the flag — CRITICAL
+                break;                              // then exit the loop
+            }
+        }
+        cleanup();   // runs whether we exited normally or were interrupted
+    }
+}
+
+// From outside, to stop the thread:
+Thread t = new Thread(new Worker());
+t.start();
+t.interrupt();   // sets the interrupted flag; wakes it from sleep/wait
+t.join();        // wait for it to actually finish
+```
+
+**Why restore the interrupt flag?** `catch (InterruptedException)` clears the flag automatically. If you don't call `Thread.currentThread().interrupt()`, any code further up the call stack that checks `isInterrupted()` will not know the thread was interrupted — swallowing the signal silently.
+
+## Runnable vs Callable vs Thread — When to Use Each
+
+```java
+// Runnable — task with no return value, no checked exception
+Runnable task = () -> doWork();
+executor.execute(task);
+
+// Callable — task with return value or checked exception
+Callable<String> task = () -> {
+    return fetchFromDB();   // can throw checked exceptions
+};
+Future<String> future = executor.submit(task);
+String result = future.get();   // blocks until done; throws ExecutionException on failure
+
+// Thread directly — only for truly standalone threads (rare in production)
+// Prefer Runnable/Callable + ExecutorService
+new Thread(() -> doWork()).start();  // no lifecycle management, not reusable
+```
+
+**Future methods:**
+```java
+future.get()                          // block until result ready
+future.get(5, TimeUnit.SECONDS)       // block with timeout
+future.isDone()                       // non-blocking check
+future.cancel(true)                   // attempt to cancel; true = interrupt if running
+future.isCancelled()                  // was it cancelled?
+```
+
+## Common Interview Questions
+
+**Q: What is the difference between `start()` and `run()`?**
+A: `start()` creates a new OS thread and has the JVM call `run()` on it — actual parallelism. Calling `run()` directly executes it on the current thread like a normal method call — no new thread, no parallelism.
+
+**Q: Can you start a thread twice?**
+A: No. Calling `start()` on an already-started thread throws `IllegalThreadStateException`. A `Thread` object is a one-use handle. If you need to run the same logic again, create a new `Thread` instance (or better, reuse an `ExecutorService`).
+
+**Q: What is the difference between `sleep()` and `yield()`?**
+A: `sleep(ms)` pauses the thread for at least the specified duration, moving it to TIMED_WAITING. It does not release any locks it holds. `yield()` is a hint to the scheduler that this thread is willing to pause so other threads of equal priority can run — but the scheduler may ignore it. `sleep` is for actual delays; `yield` is for cooperative scheduling hints (rarely used in practice).
+
+**Q: What is a daemon thread? How does it differ from a user thread?**
+A: A daemon thread is a background service thread (e.g., GC, finalizer). The JVM exits when all *user* (non-daemon) threads finish — it does not wait for daemon threads to complete. Set with `thread.setDaemon(true)` before starting. Use daemon threads for background tasks that should not block JVM shutdown (e.g., housekeeping, monitoring).
+
+**Q: What is the difference between `Runnable` and `Callable`?**
+A: `Runnable.run()` returns void and cannot throw checked exceptions. `Callable.call()` returns a value and can throw checked exceptions. Use `Callable` when you need a result or need to propagate a checked exception from a thread pool task — submit it via `ExecutorService.submit()` and retrieve the result via `Future.get()`.
+
+**Q: What happens if an exception is thrown inside a thread's `run()` method?**
+A: Uncaught exceptions in `run()` terminate the thread. They are passed to the thread's `UncaughtExceptionHandler` (or the thread group's, or the default handler which just prints the stack trace). With `ExecutorService.execute()`, the exception is silently swallowed unless you set an `UncaughtExceptionHandler`. With `submit()`, the exception is captured in the `Future` and re-thrown when you call `future.get()`.
+
+**Q: What is `join()` and when would you use it?**
+A: `t.join()` causes the current thread to block until thread `t` completes. Use it when the current thread needs results produced by `t` before continuing. With `ExecutorService`, `Future.get()` is the equivalent.
 
 ## Mini Example
 

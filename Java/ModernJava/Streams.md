@@ -11,10 +11,29 @@ Source → [Intermediate ops (lazy)] → Terminal op (triggers execution)
 
 List.of(1,2,3,4,5)
     .stream()              // source
-    .filter(n -> n > 2)    // intermediate — lazy
-    .map(n -> n * n)       // intermediate — lazy
-    .collect(toList());    // terminal — triggers everything
+    .filter(n -> n > 2)    // intermediate — lazy, nothing runs yet
+    .map(n -> n * n)       // intermediate — lazy, nothing runs yet
+    .collect(toList());    // terminal — NOW everything runs
 ```
+
+### How lazy evaluation works — trace through
+
+```java
+List.of(1, 2, 3, 4, 5)
+    .stream()
+    .filter(n -> { System.out.println("filter: " + n); return n > 2; })
+    .map(n -> { System.out.println("map: " + n); return n * n; })
+    .findFirst();   // terminal — stops as soon as one result found
+
+// Output:
+// filter: 1    ← filtered out
+// filter: 2    ← filtered out
+// filter: 3    ← passes filter
+// map: 3       ← mapped immediately
+// (stops — findFirst() has its result, 4 and 5 never processed)
+```
+
+This is why streams can be more efficient than for-loops for large datasets with `findFirst`/`anyMatch` — they short-circuit. With `collect(toList())`, all elements are processed.
 
 ## Creating Streams
 
@@ -214,19 +233,90 @@ employees.stream()
 
 ---
 
+## Optional — Avoiding NullPointerException
+
+`Optional<T>` is a container that either holds a value or is empty. Forces callers to explicitly handle the absent case.
+
+```java
+// Creating
+Optional<String> present = Optional.of("hello");         // value must be non-null
+Optional<String> empty   = Optional.empty();
+Optional<String> nullable = Optional.ofNullable(getName()); // null → empty Optional
+
+// Checking and extracting
+optional.isPresent()          // true if value exists
+optional.isEmpty()            // true if empty (Java 11+)
+optional.get()                // returns value, throws NoSuchElementException if empty — avoid bare get()
+optional.orElse("default")    // value or fallback
+optional.orElseGet(() -> compute())  // value or lazily computed fallback
+optional.orElseThrow(() -> new NotFoundException("not found"))
+
+// Transforming (like stream operations)
+Optional<Integer> len = optional.map(String::length);            // transform if present
+Optional<String>  lower = optional.filter(s -> s.length() > 3); // empty if predicate fails
+Optional<String>  flat = optional.flatMap(s -> findSomething(s)); // when your function returns Optional
+
+// The right pattern: chain, don't unwrap
+String result = findUser(id)
+    .map(User::getEmail)
+    .filter(email -> email.endsWith("@company.com"))
+    .orElse("unknown");
+```
+
+**What NOT to do with Optional:**
+```java
+// Don't use Optional as a method parameter — use overloads instead
+void process(Optional<String> name) { }  // bad — callers pass null to Optional param
+
+// Don't use Optional for fields — use null or a sentinel value
+class User { Optional<String> email; }  // bad — not serializable, not idiomatic
+
+// Don't use bare get() — defeats the purpose
+optional.get()  // if empty: NoSuchElementException — same as NPE, worse
+
+// Do use it as a return type to signal possible absence
+Optional<User> findById(int id) { ... }
+```
+
+**Optional in streams:**
+```java
+// Stream of Optionals → unwrap present ones
+List<Optional<String>> opts = List.of(Optional.of("a"), Optional.empty(), Optional.of("b"));
+List<String> values = opts.stream()
+    .filter(Optional::isPresent)
+    .map(Optional::get)
+    .collect(toList());   // ["a", "b"]
+
+// Java 9+: Optional.stream() for cleaner flatMap
+List<String> values = opts.stream()
+    .flatMap(Optional::stream)   // empty optionals contribute 0 elements
+    .collect(toList());
+```
+
+---
+
 ## Common Interview Questions
 
+**Q: Explain how lazy evaluation works in streams.**
+A: Intermediate operations (`filter`, `map`, `sorted`) don't execute when called — they build a pipeline description. Execution only starts when a terminal operation (`collect`, `findFirst`, `count`) is invoked. Each element flows through the entire pipeline before the next element starts. This enables short-circuiting: `findFirst()` stops as soon as one element passes all filters, so elements after it are never processed.
+
 **Q: What's the difference between map() and flatMap()?**
-A: `map()` applies a function to each element (1-to-1). `flatMap()` applies a function that returns a stream per element, then flattens all streams into one (1-to-many).
+A: `map()` is 1-to-1: each element produces exactly one output element. `flatMap()` is 1-to-many: each element produces a stream, and all those streams are merged into one. Use `flatMap` when your transform returns a collection or stream (e.g., splitting sentences into words, unwrapping nested lists).
 
 **Q: Are streams reusable?**
-A: No. Once a terminal operation is called, the stream is consumed and cannot be reused. Create a new stream from the source.
+A: No. A stream can only be consumed once. After a terminal operation, the stream is closed — calling any operation on it throws `IllegalStateException`. Always create a new stream from the source.
 
 **Q: What's the difference between findFirst() and findAny()?**
-A: `findFirst()` returns the first element in encounter order (deterministic). `findAny()` may return any element — faster in parallel streams because it doesn't need to maintain order.
+A: Both return `Optional<T>`. `findFirst()` always returns the first element in encounter order (deterministic). `findAny()` returns any element — in parallel streams it's faster because threads don't need to coordinate order. In sequential streams they behave identically.
 
-**Q: When does stream processing actually start?**
-A: When a terminal operation is called. Intermediate operations are lazy — they describe the pipeline but don't execute until needed.
+**Q: When would you use reduce() vs collect()?**
+A: `reduce()` folds a stream into a single immutable value (sum, max, concatenation). `collect()` accumulates into a mutable container (List, Map, String via joining). For building collections, always use `collect` — using `reduce` to build a list would create a new list copy per element (O(n²)).
 
-**Q: What is a Collector?**
-A: A reduction operation that folds stream elements into a mutable result container (List, Map, String, etc.). `Collectors.toList()`, `groupingBy()`, `joining()` are all Collectors.
+**Q: How does groupingBy work?**
+A: `Collectors.groupingBy(classifier)` builds a `Map<K, List<T>>` where keys are the result of the classifier function. Each value is a list of elements that produced that key. Combine with a downstream collector to aggregate: `groupingBy(f, counting())` gives `Map<K, Long>`, `groupingBy(f, averagingInt(g))` gives `Map<K, Double>`.
+
+**Q: When should you NOT use parallel streams?**
+A: (1) Small collections — thread coordination overhead outweighs benefit. (2) I/O-bound operations — threads block waiting; more threads don't help. (3) Operations with shared mutable state — race conditions. (4) Operations that need ordered output — parallel breaks encounter order unless you add `forEachOrdered` (which eliminates the performance gain). Default to sequential; switch to parallel only after profiling shows it helps.
+
+**Q: What is Optional and when should you use it?**
+A: `Optional<T>` is a container that either holds a value or is empty. Use it as a return type to make potential absence explicit — the caller is forced to handle it. Don't use it as a field type (not serializable), method parameter (pass null or use overloads), or with `get()` without checking (defeats the purpose). Correct use: chain with `map`, `filter`, `orElse`, `orElseThrow`.

@@ -394,3 +394,53 @@ The output looks like this:
 ```bash
 1a 3a 4a
 ```
+
+## Autoboxing and Unboxing
+
+Java automatically converts between primitives and their wrapper classes.
+
+```java
+// Autoboxing — primitive → wrapper
+Integer a = 5;          // compiler: Integer.valueOf(5)
+List<Integer> list = new ArrayList<>();
+list.add(10);           // autoboxed to Integer
+
+// Unboxing — wrapper → primitive
+int x = a;              // compiler: a.intValue()
+int sum = list.get(0) + 1;  // unboxed for arithmetic
+```
+
+**Integer cache trap — the most common interview trick:**
+```java
+Integer a = 127;
+Integer b = 127;
+System.out.println(a == b);   // true  — cached range: -128 to 127
+
+Integer c = 128;
+Integer d = 128;
+System.out.println(c == d);   // false — outside cache, new objects
+System.out.println(c.equals(d));  // true  — always use equals() for wrappers
+```
+
+**NullPointerException from unboxing:**
+```java
+Integer value = null;
+int x = value;   // NullPointerException — unboxing null throws NPE
+```
+
+## Common Interview Questions
+
+**Q: What is the difference between `==` and `equals()` for Integer objects?**
+A: `==` compares object references. `equals()` compares values. For `Integer` values between -128 and 127, `==` may return `true` due to the Integer cache, but above 127 it returns `false` even for equal values. Always use `equals()` when comparing wrapper types.
+
+**Q: What is short-circuit evaluation? Why does it matter?**
+A: With `&&`, if the left side is `false`, the right side is never evaluated. With `||`, if the left side is `true`, the right side is skipped. This matters for null checks: `if (obj != null && obj.getValue() > 0)` is safe because the second part only runs when obj is non-null. The non-short-circuit operators `&` and `|` always evaluate both sides.
+
+**Q: What is numeric promotion and when does it happen?**
+A: When `byte`, `short`, or `char` are used in arithmetic, they're promoted to `int` before the operation. This is why `short a = 1; short b = 2; short c = a + b;` does not compile — the sum is an `int`. You must cast: `short c = (short)(a + b)`.
+
+**Q: What's the output of `System.out.println(1 + 2 + "3")`?**
+A: `"33"`. Evaluated left to right: `1 + 2 = 3` (integer addition), then `3 + "3" = "33"` (string concatenation). Compare with `"1" + 2 + 3` → `"123"`.
+
+**Q: Can you use a `String` in a switch statement?**
+A: Yes, since Java 7. Valid switch types: `int`/`Integer`, `byte`/`Byte`, `short`/`Short`, `char`/`Character`, `String`, and `enum`. Note: `long`, `float`, `double`, and `boolean` are not allowed.

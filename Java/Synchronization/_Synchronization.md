@@ -101,15 +101,70 @@ Cooperation (Inter-thread communication) is a mechanism in which a thread is pau
 
 ## Understanding the process of inter-thread communication
 
-1. Threads enter to acquire lock.
-2. Lock is acquired by on thread.
-3. Now thread goes to waiting state if you call wait() method on the object. Otherwise it releases the lock and exits.
-4. If you call notify() or notifyAll() method, thread moves to the notified state (runnable state).
-5. Now thread is available to acquire lock.
-6. After completion of the task, thread releases the lock and exits the monitor state of the object.
+1. Thread enters `synchronized` block → acquires the object's lock (monitor).
+2. Thread calls `wait()` → **releases the lock** and moves to WAITING state.
+3. Another thread acquires the same lock, does its work, calls `notify()` or `notifyAll()`.
+4. Waiting thread moves to BLOCKED state (competing to re-acquire the lock).
+5. Waiting thread re-acquires the lock → returns from `wait()` → continues.
 
-## Why ```wait()```, ```notify()``` and ```notifyAll()``` methods are defined in ```Object``` class not ```Thread``` class?
-It is because they are related to lock and object has a lock.
+```java
+// Classic producer-consumer with wait/notify
+class Buffer {
+    private final Queue<Integer> queue = new LinkedList<>();
+    private final int capacity;
+
+    synchronized void produce(int item) throws InterruptedException {
+        while (queue.size() == capacity) {  // WHILE not IF — see below
+            wait();                          // releases lock, waits for space
+        }
+        queue.add(item);
+        notifyAll();                         // wake consumers
+    }
+
+    synchronized int consume() throws InterruptedException {
+        while (queue.isEmpty()) {            // WHILE not IF
+            wait();                          // releases lock, waits for item
+        }
+        int item = queue.poll();
+        notifyAll();                         // wake producers
+        return item;
+    }
+}
+```
+
+### Why `while` and not `if` before `wait()`
+
+**Spurious wakeups** — a thread can wake up from `wait()` without being notified. This is allowed by the Java specification (and happens on some JVMs/OS implementations). If you use `if`, the thread skips re-checking the condition and proceeds on a false assumption:
+
+```java
+// WRONG — if condition was true when we called wait(),
+// but a spurious wakeup fires, we proceed with empty queue → crash
+if (queue.isEmpty()) {
+    wait();
+}
+int item = queue.poll();   // queue might still be empty!
+
+// CORRECT — always re-check after waking
+while (queue.isEmpty()) {
+    wait();   // if spurious wakeup: loop back, check again, sleep again
+}
+int item = queue.poll();   // guaranteed: queue is not empty
+```
+
+Also, with `notifyAll()`, multiple threads wake up but only one can proceed (only one has the item). The `while` loop puts the others back to sleep.
+
+### `notify()` vs `notifyAll()`
+
+```java
+notify();     // wakes ONE arbitrary waiting thread — risk: wrong thread wakes up
+notifyAll();  // wakes ALL waiting threads — all compete for lock, only one proceeds
+```
+
+**Prefer `notifyAll()`** unless you are certain only one waiting thread should ever wake, and all waiting threads are identical. `notify()` with multiple consumer types can cause one type to permanently hog the wakeups while the other starves.
+
+## Why `wait()`, `notify()`, `notifyAll()` are on `Object`, not `Thread`
+
+Because the lock belongs to the **object** (the monitor), not to a specific thread. Any thread that enters `synchronized(obj)` acquires `obj`'s lock. `wait()` says "release *this object's* lock and sleep." It's the object being waited on that matters, not which thread. Every object having these methods lets any object be used as a condition variable.
 
 ## Difference between ```wait()``` and ```sleep()``` method
 | ```wait()``` | ```sleep()``` | 
@@ -150,5 +205,37 @@ If thread is not in sleeping or waiting state, calling the interrupt() method se
 The isInterrupted() method returns the interrupted flag either true or false. The static interrupted() method returns the interrupted flag after that it sets the flag to false if it is true.
 
 [InterruptedMethod](./InterruptedMethod.java)
+
+## Common Interview Questions
+
+**Q: What is synchronization and why is it needed?**
+A: Synchronization controls access to shared resources by multiple threads. Without it, two threads can interleave reads and writes, causing race conditions — corrupted data, lost updates, or inconsistent state. Java synchronization uses intrinsic locks (monitors): only one thread holds the lock at a time, and all writes made while holding the lock are visible to the next thread that acquires it.
+
+**Q: What is the difference between a synchronized method and a synchronized block?**
+A: A synchronized method locks `this` (or the Class object for static methods) for its entire duration. A synchronized block locks a specified object for only the enclosed statements. Synchronized blocks are preferred — smaller critical sections mean less contention and better throughput.
+
+**Q: What is a deadlock? Write a minimal example.**
+A: Deadlock is when two threads each hold a lock and wait for the other's lock — circular dependency, no progress forever.
+```java
+synchronized (lockA) {          // Thread 1 holds A, waits for B
+    synchronized (lockB) { }    // Thread 2 holds B, waits for A → deadlock
+}
+```
+Prevention: always acquire locks in the same order everywhere in the codebase.
+
+**Q: What is the difference between `wait()` and `sleep()`?**
+A: `wait()` releases the lock and moves the thread to WAITING — another thread must call `notify()` to wake it. `sleep()` pauses the thread for a duration but **does not release any locks**. `wait()` is for inter-thread coordination; `sleep()` is for introducing a delay.
+
+**Q: Why must `wait()`, `notify()`, and `notifyAll()` be called from a synchronized block?**
+A: Because they operate on the object's monitor. If a thread calls `wait()` without holding the lock, the JVM throws `IllegalMonitorStateException`. The lock is required so the check-then-wait sequence is atomic — otherwise another thread could call `notify()` between your check and your `wait()`, and you'd miss the notification.
+
+**Q: Why should you use `while` instead of `if` before `wait()`?**
+A: Two reasons: (1) **Spurious wakeups** — a thread can wake from `wait()` without being notified; re-checking the condition in a loop handles this safely. (2) **notifyAll()** wakes all waiting threads, but the condition may only be true for one of them — the others must go back to sleep.
+
+**Q: What is static synchronization? How does it differ from instance synchronization?**
+A: Instance synchronization locks the instance (`this`) — two threads on different instances don't block each other. Static synchronization locks the `Class` object — only one thread across all instances can execute that method at a time. Use static sync when protecting class-level (static) state.
+
+**Q: What is the difference between `notify()` and `notifyAll()`?**
+A: `notify()` wakes one arbitrary waiting thread. `notifyAll()` wakes all waiting threads — they all compete for the lock, one proceeds, the rest check their condition and may go back to sleep. Prefer `notifyAll()` unless you are certain all waiting threads are interchangeable and exactly one should proceed.
 
 

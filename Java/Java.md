@@ -36,11 +36,11 @@ javadoc -d JavaDoc Calculator.java
 ### Packages and Imports
 - To run the java file use below commands
     ```bash
-        javac filename.java
-        java filename {arguments}
+    javac filename.java
+    java filename {arguments}
 
-        // other ways of compiling
-        javac packagea/ClassA.java packageb/ClassB.java 
+    // other ways of compiling
+    javac packagea/ClassA.java packageb/ClassB.java 
     ```
 - Java puts classes in packages.
 - Packages are used to avoid naming conflicts
@@ -127,6 +127,367 @@ Java has eight built-in data types, referred to as the Java primitive types.
     - Class variables—in scope from declaration until program ends
 
 
+## OOP Principles
+
+### 1. Encapsulation
+
+**What it is:** Keeping an object's data private and only exposing controlled operations on it.
+
+**Without encapsulation - anything can go wrong:**
+```java
+class BankAccount {
+    double balance;   // public — anyone can write directly
+}
+
+account.balance = -500;   // valid! No check. Invariant broken.
+```
+
+**With encapsulation - the class owns its invariants:**
+```java
+class BankAccount {
+    private double balance;   // nobody writes this directly
+
+    public void deposit(double amount) {
+        if (amount <= 0) throw new IllegalArgumentException("Must be positive");
+        balance += amount;
+    }
+
+    public void withdraw(double amount) {
+        if (amount > balance) throw new IllegalStateException("Insufficient funds");
+        balance -= amount;
+    }
+
+    public double getBalance() { return balance; }
+}
+```
+
+Now `balance` can never go negative unless a bug is inside `BankAccount` itself - easy to find and fix.
+
+**The other benefit:** you can change the internal implementation (e.g., store balance in cents as `long` for precision) without touching any caller. The public interface stays the same.
+
+**Access modifiers:**
+| Modifier | Same class | Same package | Subclass | Everywhere |
+|---|---|---|---|---|
+| `private` | ✓ | — | — | — |
+| (package) | ✓ | ✓ | — | — |
+| `protected` | ✓ | ✓ | ✓ | — |
+| `public` | ✓ | ✓ | ✓ | ✓ |
+
+---
+
+### 2. Inheritance
+
+**What it is:** A class acquires the fields and methods of a parent class. Models an "is-a" relationship.
+
+```java
+class Animal {
+    String name;
+    void breathe() { System.out.println("breathing"); }
+}
+
+class Dog extends Animal {
+    void fetch() { System.out.println(name + " fetches!"); }  // inherits name
+}
+
+Dog d = new Dog();
+d.breathe();   // inherited from Animal
+d.fetch();     // Dog's own method
+```
+
+**What you can do in a subclass:**
+- Use all non-private fields and methods from parent
+- Override methods to change behavior (`@Override`)
+- Add new fields and methods
+- Call parent via `super.method()` or `super()`
+
+**Rules for overriding:**
+```java
+class Animal {
+    protected Animal makeChild() { return new Animal(); }  // covariant return
+}
+
+class Dog extends Animal {
+    @Override
+    public Dog makeChild() { return new Dog(); }  // OK: more accessible, subtype return
+    // Cannot narrow access (e.g. private would fail)
+    // Cannot throw new/broader checked exceptions
+}
+```
+
+**When NOT to use inheritance:**
+If you can't say "a Dog IS-A Animal" truthfully in every context, don't extend. Classic mistake:
+```java
+class Stack extends ArrayList { }  // Stack IS-A ArrayList? No.
+// Now Stack has add(), remove(), get() exposed — violates stack contract.
+// Should be: Stack HAS-A list internally (composition)
+```
+
+---
+
+### 3. Composition
+
+**What it is:** Building behavior by combining objects rather than inheriting it.
+
+```java
+// Instead of: class FlyingDog extends Dog, Bird  (Java doesn't allow this)
+// Use composition:
+class FlyingDog {
+    private Dog dog = new Dog();      // HAS-A dog
+    private Wings wings = new Wings(); // HAS-A wings
+
+    void fetch()  { dog.fetch(); }
+    void fly()    { wings.flap(); }
+}
+```
+
+**Why composition wins over inheritance:**
+
+```java
+// Problem with inheritance: locked at compile time
+class Logger {
+    void log(String msg) { System.out.println(msg); }
+}
+class AuditLogger extends Logger {
+    @Override void log(String msg) { super.log("[AUDIT] " + msg); }
+}
+// AuditLogger is forever tied to Logger's internals.
+// If Logger.log() changes behavior, AuditLogger silently changes too.
+
+// With composition: behavior is explicit and swappable
+class AuditLogger {
+    private final Logger delegate;  // injected - could be any Logger
+
+    AuditLogger(Logger delegate) { this.delegate = delegate; }
+
+    void log(String msg) { delegate.log("[AUDIT] " + msg); }
+}
+// Swap the delegate at runtime. No inheritance coupling.
+```
+
+**Rule: Favor composition over inheritance.** Use inheritance only when:
+- The relationship is truly "is-a" in every context
+- You control the parent class (extending third-party classes is risky)
+
+---
+
+### 4. Polymorphism
+
+**What it is:** One interface, many implementations. The same code works with different types.
+
+#### Compile-time polymorphism - Overloading
+Same method name, different parameter lists. Resolved by the compiler based on argument types.
+
+```java
+class Printer {
+    void print(String s)         { System.out.println("String: " + s); }
+    void print(int n)            { System.out.println("Int: " + n); }
+    void print(String s, int n)  { System.out.println(s + " x " + n); }
+}
+
+Printer p = new Printer();
+p.print("hi");      // → print(String)
+p.print(42);        // → print(int)
+p.print("hi", 3);   // → print(String, int)
+```
+
+Note: return type alone does NOT distinguish overloads - the compiler uses parameter types only.
+
+#### Runtime polymorphism - Overriding
+Subclass provides its own implementation. The JVM decides which one to call at runtime based on the actual object type - not the reference type.
+
+```java
+class Animal {
+    void sound() { System.out.println("..."); }
+}
+class Dog extends Animal {
+    @Override void sound() { System.out.println("Woof"); }
+}
+class Cat extends Animal {
+    @Override void sound() { System.out.println("Meow"); }
+}
+
+// Same code, different behavior depending on actual type:
+Animal[] animals = { new Dog(), new Cat(), new Dog() };
+for (Animal a : animals) {
+    a.sound();    // Woof, Meow, Woof - JVM dispatches to actual type
+}
+```
+
+**Why it matters:** You can write code against the `Animal` interface and it works for every subtype - including ones written in the future. This is the foundation of the Open/Closed Principle (open for extension, closed for modification).
+
+**Variable and static method shadowing (not overriding):**
+```java
+class Parent {
+    String name = "Parent";
+    static void greet() { System.out.println("Hello from Parent"); }
+}
+class Child extends Parent {
+    String name = "Child";     // shadows, not overrides
+    static void greet() { System.out.println("Hello from Child"); }
+}
+
+Parent p = new Child();
+System.out.println(p.name);  // "Parent" — reference type wins for fields
+p.greet();                   // "Hello from Parent" — reference type wins for static
+// Only instance methods are overridden (runtime dispatch)
+```
+
+---
+
+### 5. Abstraction
+
+**What it is:** Exposing *what* something does, hiding *how* it does it. You interact with a simplified interface, not the internal complexity.
+
+Two mechanisms in Java:
+
+**Abstract class** - partially implemented, forces subclasses to complete it:
+```java
+abstract class Shape {
+    String color;
+    Shape(String color) { this.color = color; }
+
+    abstract double area();     // "what" — every shape must implement this
+    abstract double perimeter();
+
+    void describe() {           // "how" — shared logic reused by all shapes
+        System.out.printf("%s: area=%.2f%n", color, area());
+    }
+}
+
+class Circle extends Shape {
+    double radius;
+    Circle(String color, double radius) { super(color); this.radius = radius; }
+
+    @Override double area()      { return Math.PI * radius * radius; }
+    @Override double perimeter() { return 2 * Math.PI * radius; }
+}
+```
+
+**Interface** - pure contract, no implementation (pre-Java 8):
+```java
+interface Drawable {
+    void draw();         // every implementor must provide this
+}
+interface Resizable {
+    void resize(double factor);
+}
+
+// A class can fulfill multiple contracts
+class Circle extends Shape implements Drawable, Resizable {
+    public void draw()               { /* render to screen */ }
+    public void resize(double f)     { radius *= f; }
+}
+```
+
+---
+
+### Interface vs Abstract Class - The Key Interview Question
+
+| | Interface | Abstract Class |
+|---|---|---|
+| Multiple inheritance | Yes - a class can implement many | No - single `extends` only |
+| Constructor | No | Yes |
+| Fields | `public static final` only | Any modifier |
+| Methods (pre-Java 8) | Abstract only | Abstract + concrete |
+| Methods (Java 8+) | Abstract + `default` + `static` | Abstract + concrete |
+| Instance state | No | Yes |
+| Use when | Define a **capability/contract** across unrelated classes | Share **implementation** among related classes |
+
+```java
+// Interface — Bird and Airplane are unrelated, but both can fly
+interface Flyable { void fly(); }
+class Bird    implements Flyable { public void fly() { /* flap */ } }
+class Airplane implements Flyable { public void fly() { /* engine */ } }
+
+// Abstract class — Circle and Rectangle are related (both shapes)
+// Share state (color) and behavior (describe())
+abstract class Shape {
+    protected String color;
+    Shape(String color)     { this.color = color; }
+    abstract double area();
+    void describe()         { System.out.println(color + ": " + area()); }
+}
+class Circle    extends Shape { /* ... */ }
+class Rectangle extends Shape { /* ... */ }
+```
+
+**Java 8+ blurred the line** with `default` methods on interfaces. Still choose abstract class when you need: instance state, a constructor, or `protected`/package-private access.
+
+### equals() and hashCode() Contract - Critical
+
+**Contract:** if `a.equals(b)` is `true`, then `a.hashCode() == b.hashCode()` MUST be true.
+(The reverse is not required - hash collisions are allowed.)
+
+**Why both must be overridden together:**
+```java
+class Point {
+    int x, y;
+    Point(int x, int y) { this.x = x; this.y = y; }
+
+    // ONLY overriding equals — hashCode still uses object identity
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Point p)) return false;
+        return x == p.x && y == p.y;
+    }
+}
+
+Point p1 = new Point(1, 2);
+Point p2 = new Point(1, 2);
+p1.equals(p2);  // true — equals says same
+
+Set<Point> set = new HashSet<>();
+set.add(p1);
+set.contains(p2);  // FALSE! — different hashCode → different bucket → never found
+```
+
+**Correct implementation:**
+```java
+@Override
+public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Point p)) return false;
+    return x == p.x && y == p.y;
+}
+
+@Override
+public int hashCode() {
+    return Objects.hash(x, y);   // consistent with equals
+}
+```
+
+**Interview trap:** "What happens if you only override `equals`?" → HashMap and HashSet break silently.
+
+### Comparable vs Comparator
+
+```java
+// Comparable — natural ordering, class modifies itself (one sort order)
+class Employee implements Comparable<Employee> {
+    String name;
+    int salary;
+
+    @Override
+    public int compareTo(Employee other) {
+        return Integer.compare(this.salary, other.salary);  // ascending salary
+    }
+}
+
+// Comparator — external ordering, doesn't touch the class (multiple sort orders)
+Comparator<Employee> byName = Comparator.comparing(Employee::getName);
+Comparator<Employee> bySalary = Comparator.comparingInt(Employee::getSalary).reversed();
+Comparator<Employee> byNameThenSalary = byName.thenComparing(bySalary);
+
+employees.sort(byNameThenSalary);
+Collections.sort(employees);  // uses Comparable (natural order)
+```
+
+| | Comparable | Comparator |
+|---|---|---|
+| Location | Inside the class | External / anonymous / lambda |
+| Method | `compareTo(T o)` | `compare(T o1, T o2)` |
+| Sort orders | One (natural) | Multiple |
+| Use when | Class has a clear natural order | Need custom/multiple orderings |
+
 ### Difference between final, finally and finalize
 
 | Sr. no. | 	Key |	final |	finally	| finalize |
@@ -175,6 +536,57 @@ else
     > A static field declared by T is used and the field is not a constant variable.  
     > T is a top-level class, and an assert statement lexically nested within T is executed. 
 - hashCode() method returns the hash code for the Method class object.
+
+## Functional Interfaces (java.util.function)
+
+The 4 core functional interfaces - know these cold:
+
+```java
+// Predicate<T> — boolean test on T
+Predicate<String> isLong = s -> s.length() > 5;
+isLong.test("Hello");       // false
+isLong.test("Hello World"); // true
+
+// Composition
+Predicate<String> startsWithH = s -> s.startsWith("H");
+Predicate<String> longAndH = isLong.and(startsWithH);   // both must match
+Predicate<String> longOrH  = isLong.or(startsWithH);    // either
+Predicate<String> notLong  = isLong.negate();
+
+// Function<T, R> — maps T to R
+Function<String, Integer> strLen = String::length;
+strLen.apply("hello");  // 5
+
+// Chaining
+Function<String, String> upper = String::toUpperCase;
+Function<String, Integer> upperLen = upper.andThen(strLen); // apply upper, then strLen
+Function<String, Integer> lenFirst = strLen.compose(upper); // apply upper first, then strLen
+
+// Consumer<T> — accepts T, returns nothing (side effect)
+Consumer<String> print = System.out::println;
+print.accept("hello");  // prints hello
+
+// Supplier<T> — no input, produces T
+Supplier<List<String>> listFactory = ArrayList::new;
+List<String> list = listFactory.get();  // new ArrayList each time
+```
+
+**BiXxx variants for two arguments:**
+```java
+BiFunction<String, Integer, String>  // (String, Integer) → String
+BiPredicate<String, String>          // (String, String) → boolean
+BiConsumer<String, Integer>          // (String, Integer) → void
+```
+
+**Comparator.comparing() - most used in practice:**
+```java
+// Chain comparators fluently
+employees.sort(
+    Comparator.comparing(Employee::getDepartment)
+              .thenComparingInt(Employee::getSalary)
+              .reversed()
+);
+```
 
 - Features Introduced in Java 8 :
     - Stream API
