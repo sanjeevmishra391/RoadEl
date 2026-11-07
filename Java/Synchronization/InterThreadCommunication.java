@@ -5,7 +5,7 @@ class Customer {
 
     synchronized void withdraw(int amount) {
         System.out.println("Withdrawing...");
-        if(this.amount < amount) {
+        while(this.amount < amount) {
             System.out.println("Less balance; waiting for deposit...");
             try{
                 wait();

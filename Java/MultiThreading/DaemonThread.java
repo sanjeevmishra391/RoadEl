@@ -4,6 +4,14 @@ public class DaemonThread extends Thread {
     public void run() {
         if(Thread.currentThread().isDaemon()) {
             System.out.println("Daemon thread");
+            try {
+                System.out.println("Making it sleep");
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            System.out.println("Done...");
         } else {
             System.out.println("User thread");
         }

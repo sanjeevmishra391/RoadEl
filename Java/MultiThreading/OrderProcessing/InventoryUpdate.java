@@ -12,7 +12,7 @@ public class InventoryUpdate implements Callable<String> {
     @Override
     public String call() throws Exception {
         // Simulating payment validation logic
-        Thread.sleep(2000);  // Simulating time-consuming task
+        Thread.sleep(5000);  // Simulating time-consuming task
         return "Inventory updated for order: " + orderId;
     }
 }

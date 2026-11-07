@@ -3,6 +3,11 @@ package Java.MultiThreading;
 public class ThreadGroupDemo implements Runnable {
 
     public void run() {
+        try {
+            Thread.sleep(300);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         System.out.println("Running thread : " + Thread.currentThread().getName());
     }
     public static void main(String[] args) {
@@ -14,6 +19,11 @@ public class ThreadGroupDemo implements Runnable {
         Thread t3 = new Thread(tg, target, "Thread 3");
         
         t1.start();
+        try {
+            t1.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         t2.start();
         t3.start();
         tg.list();

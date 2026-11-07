@@ -28,7 +28,11 @@ public class ThreadJoin extends Thread {
             System.out.println("The exception has been caught " + e);  
         }
 
+        System.out.println("T1 state: " + t1.getState());
+
         t2.start();
+
+        System.out.println("T2 state: " + t2.getState());
 
         try {
             System.out.println("The current thread name is: "+ Thread.currentThread().getName());  
@@ -36,6 +40,7 @@ public class ThreadJoin extends Thread {
         } catch (Exception e) {
             System.out.println("The exception has been caught " + e);  
         }
+
 
         t3.start();
 
